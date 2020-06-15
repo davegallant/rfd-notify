@@ -1,5 +1,9 @@
+extern crate pretty_env_logger;
+#[macro_use]
+extern crate log;
 mod config;
 mod rfd;
+
 use std::env;
 
 fn help() {
@@ -11,20 +15,20 @@ rfd-notify <config-toml>
 }
 
 fn main() {
+    pretty_env_logger::init();
     let args: Vec<String> = env::args().collect();
 
     match args.len() {
         2 => {
             let config_path = &args[1];
             let config = config::parse(config_path);
-            println!("{:?}\n", config);
-            let hot_deals = rfd::get_hot_deals()
-                .map_err(|err| println!("{:?}", err))
-                .ok();
-            rfd::parse_hot_deals(hot_deals.unwrap())
+            debug!("{:?}\n", config);
+            let hot_deals = rfd::get_hot_deals().map_err(|err| error!("{:?}", err)).ok();
+            let parsed_deals = rfd::parse_hot_deals(hot_deals.unwrap());
         }
         _ => {
             help();
         }
     }
+    info!("Complete")
 }

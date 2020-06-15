@@ -1,12 +1,12 @@
 use reqwest;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
-struct Deals {
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Deals {
     topics: Vec<Topic>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Topic {
     title: String,
     post_time: String,
@@ -14,7 +14,7 @@ struct Topic {
     topic_id: u32,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Offer {
     dealer_name: String,
 }
@@ -28,6 +28,6 @@ pub async fn get_hot_deals() -> Result<String, Box<dyn std::error::Error>> {
     Ok(resp)
 }
 
-pub fn parse_hot_deals(response: String) {
-    let deals: Deals = serde_json::from_str(&response).unwrap();
+pub fn parse_hot_deals(response: String) -> Deals {
+    return serde_json::from_str(&response).unwrap();
 }
