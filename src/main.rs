@@ -1,6 +1,7 @@
 extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
+extern crate crypto;
 mod config;
 mod rfd;
 
@@ -25,6 +26,7 @@ fn main() {
             debug!("{:?}\n", config);
             let hot_deals = rfd::get_hot_deals().map_err(|err| error!("{:?}", err)).ok();
             let parsed_deals = rfd::parse_hot_deals(hot_deals.unwrap());
+            rfd::match_deals(parsed_deals, config.keywords)
         }
         _ => {
             help();

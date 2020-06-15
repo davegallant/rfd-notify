@@ -4,7 +4,7 @@ use std::fs;
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
-    keywords: Vec<String>,
+    pub keywords: Vec<String>,
     sendgrid: Sendgrid,
 }
 

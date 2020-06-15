@@ -1,3 +1,6 @@
+use crypto::digest::Digest;
+use crypto::sha2::Sha256;
+use regex::RegexBuilder;
 use reqwest;
 use serde::{Deserialize, Serialize};
 
@@ -12,11 +15,12 @@ struct Topic {
     post_time: String,
     web_path: String,
     topic_id: u32,
+    offer: Offer,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Offer {
-    dealer_name: String,
+    dealer_name: Option<String>,
 }
 
 #[tokio::main]
@@ -30,4 +34,45 @@ pub async fn get_hot_deals() -> Result<String, Box<dyn std::error::Error>> {
 
 pub fn parse_hot_deals(response: String) -> Deals {
     return serde_json::from_str(&response).unwrap();
+}
+
+fn hash_deal(topic: &Topic) {
+    let mut digest = format!("{}{}{}", topic.web_path, topic.title, topic.post_time);
+    let mut hasher = Sha256::new();
+    hasher.input_str(&digest);
+    let hash = hasher.result_str();
+
+    println!("hash is: {}", &hash);
+}
+
+pub fn match_deals(deals: Deals, expressions: Vec<String>) {
+    for topic in deals.topics.iter() {
+        for expression in expressions.iter() {
+            let mut found_match = false;
+            let re = RegexBuilder::new(expression)
+                .case_insensitive(true)
+                .build()
+                .expect(&format!("Invalid regex {}", expression));
+            if re.is_match(&topic.title) {
+                found_match = true;
+                debug!(
+                    "Expression '{}' matched title: {}",
+                    expression, &topic.title
+                )
+            } else {
+                let dealer_name = topic.offer.dealer_name.as_ref().unwrap();
+                if re.is_match(&dealer_name) {
+                    found_match = true;
+                    debug!(
+                        "Expression '{}' matched dealer: {}",
+                        expression, &topic.title
+                    )
+                }
+            }
+            if !found_match {
+                continue;
+            }
+            hash_deal(topic)
+        }
+    }
 }
