@@ -1,4 +1,5 @@
 mod config;
+mod rfd;
 use std::env;
 
 fn help() {
@@ -15,8 +16,12 @@ fn main() {
     match args.len() {
         2 => {
             let config_path = &args[1];
-            println!("{}\n", config_path);
-            config::parse(config_path);
+            let config = config::parse(config_path);
+            println!("{:?}\n", config);
+            let hot_deals = rfd::get_hot_deals()
+                .map_err(|err| println!("{:?}", err))
+                .ok();
+            rfd::parse_hot_deals(hot_deals.unwrap())
         }
         _ => {
             help();
