@@ -1,3 +1,4 @@
+use crate::db;
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
 use regex::RegexBuilder;
@@ -36,13 +37,13 @@ pub fn parse_hot_deals(response: String) -> Deals {
     return serde_json::from_str(&response).unwrap();
 }
 
-fn hash_deal(topic: &Topic) {
-    let mut digest = format!("{}{}{}", topic.web_path, topic.title, topic.post_time);
+fn hash_deal(topic: &Topic) -> String {
+    let digest = format!("{}{}{}", topic.web_path, topic.title, topic.post_time);
     let mut hasher = Sha256::new();
     hasher.input_str(&digest);
     let hash = hasher.result_str();
 
-    println!("hash is: {}", &hash);
+    return hash;
 }
 
 pub fn match_deals(deals: Deals, expressions: Vec<String>) {
@@ -60,19 +61,22 @@ pub fn match_deals(deals: Deals, expressions: Vec<String>) {
                     expression, &topic.title
                 )
             } else {
-                let dealer_name = topic.offer.dealer_name.as_ref().unwrap();
-                if re.is_match(&dealer_name) {
-                    found_match = true;
-                    debug!(
-                        "Expression '{}' matched dealer: {}",
-                        expression, &topic.title
-                    )
+                if topic.offer.dealer_name.is_some() {
+                    let dealer_name = topic.offer.dealer_name.as_ref().unwrap();
+                    if re.is_match(&dealer_name) {
+                        found_match = true;
+                        debug!(
+                            "Expression '{}' matched dealer: {}",
+                            expression, &topic.title
+                        )
+                    }
                 }
             }
             if !found_match {
                 continue;
             }
-            hash_deal(topic)
+            let deal_hash = hash_deal(topic);
+            db::insert(deal_hash);
         }
     }
 }

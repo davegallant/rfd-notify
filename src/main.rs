@@ -3,6 +3,7 @@ extern crate pretty_env_logger;
 extern crate log;
 extern crate crypto;
 mod config;
+mod db;
 mod rfd;
 
 use std::env;
