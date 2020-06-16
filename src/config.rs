@@ -4,15 +4,15 @@ use std::fs;
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
-    pub keywords: Vec<String>,
-    sendgrid: Sendgrid,
+    pub expressions: Vec<String>,
+    pub sendgrid: Sendgrid,
 }
 
 #[derive(Deserialize, Debug)]
-struct Sendgrid {
-    mail_from: String,
-    mail_to: String,
-    api_key: String,
+pub struct Sendgrid {
+    pub mail_from: String,
+    pub mail_to: String,
+    pub api_key: String,
 }
 
 pub fn parse(filename: &String) -> Config {

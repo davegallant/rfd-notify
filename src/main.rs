@@ -4,6 +4,7 @@ extern crate log;
 extern crate crypto;
 mod config;
 mod db;
+mod mail;
 mod rfd;
 
 use std::env;
@@ -27,7 +28,7 @@ fn main() {
             debug!("{:?}\n", config);
             let hot_deals = rfd::get_hot_deals().map_err(|err| error!("{:?}", err)).ok();
             let parsed_deals = rfd::parse_hot_deals(hot_deals.unwrap());
-            rfd::match_deals(parsed_deals, config.keywords)
+            rfd::match_deals(parsed_deals, config)
         }
         _ => {
             help();

@@ -1,4 +1,6 @@
+use crate::config::Config;
 use crate::db;
+use crate::mail;
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
 use regex::RegexBuilder;
@@ -11,10 +13,10 @@ pub struct Deals {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Topic {
-    title: String,
-    post_time: String,
-    web_path: String,
+pub struct Topic {
+    pub title: String,
+    pub post_time: String,
+    pub web_path: String,
     topic_id: u32,
     offer: Offer,
 }
@@ -46,9 +48,9 @@ fn hash_deal(topic: &Topic) -> String {
     return hash;
 }
 
-pub fn match_deals(deals: Deals, expressions: Vec<String>) {
+pub fn match_deals(deals: Deals, config: Config) {
     for topic in deals.topics.iter() {
-        for expression in expressions.iter() {
+        for expression in config.expressions.iter() {
             let mut found_match = false;
             let re = RegexBuilder::new(expression)
                 .case_insensitive(true)
@@ -76,7 +78,12 @@ pub fn match_deals(deals: Deals, expressions: Vec<String>) {
                 continue;
             }
             let deal_hash = hash_deal(topic);
-            db::insert(deal_hash);
+            if db::hash_exists(&deal_hash) {
+                debug!("deal hash '{}' already exists", &deal_hash);
+            } else {
+                db::insert(&deal_hash);
+                mail::send(topic, &config);
+            }
         }
     }
 }
