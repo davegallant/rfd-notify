@@ -13,17 +13,29 @@ pub struct Deals {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Topic {
-    pub title: String,
-    pub post_time: String,
-    pub web_path: String,
-    topic_id: u32,
-    offer: Offer,
+pub struct Posts {
+    pub posts: Vec<Post>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Offer {
-    dealer_name: Option<String>,
+pub struct Post {
+    pub body: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Topic {
+    #[serde(rename = "topic_id")]
+    pub id: u32,
+    pub title: String,
+    pub post_time: String,
+    pub web_path: String,
+    pub offer: Offer,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Offer {
+    pub dealer_name: Option<String>,
+    pub url: String,
 }
 
 #[tokio::main]
@@ -35,7 +47,23 @@ pub async fn get_hot_deals() -> Result<String, Box<dyn std::error::Error>> {
     Ok(resp)
 }
 
+#[tokio::main]
+pub async fn get_topic(topic_id: u32) -> Result<String, Box<dyn std::error::Error>> {
+    let resp = reqwest::get(&format!(
+        "https://forums.redflagdeals.com/api/topics/{}/posts?per_page=1&page=1",
+        topic_id
+    ))
+    .await?
+    .text()
+    .await?;
+    Ok(resp)
+}
+
 pub fn parse_hot_deals(response: String) -> Deals {
+    return serde_json::from_str(&response).unwrap();
+}
+
+pub fn parse_posts(response: String) -> Posts {
     return serde_json::from_str(&response).unwrap();
 }
 
@@ -81,8 +109,14 @@ pub fn match_deals(deals: Deals, config: Config) {
             if db::hash_exists(&deal_hash) {
                 debug!("deal hash '{}' already exists", &deal_hash);
             } else {
+                let posts = parse_posts(
+                    get_topic(topic.id)
+                        .map_err(|err| error!("{:?}", err))
+                        .ok()
+                        .unwrap(),
+                );
                 db::insert(&deal_hash);
-                mail::send(topic, &config);
+                mail::send(topic, &posts, &config);
             }
         }
     }
