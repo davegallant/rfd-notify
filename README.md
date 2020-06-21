@@ -1,5 +1,7 @@
 # rfd-notify
 
+![](https://github.com/davegallant/rfd-notify/workflows/.github/workflows/ci.yml/badge.svg)
+
 This tool looks for regular expressions from [RedFlagDeals.com forums](https://forums.redflagdeals.com/hot-deals-f9/) and will send emails based on matches.
 
 
