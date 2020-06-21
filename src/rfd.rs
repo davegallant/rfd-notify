@@ -6,22 +6,22 @@ use crypto::sha2::Sha256;
 use regex::RegexBuilder;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
 pub struct Deals {
     topics: Vec<Topic>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
 pub struct Posts {
     pub posts: Vec<Post>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
 pub struct Post {
     pub body: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
 pub struct Topic {
     #[serde(rename = "topic_id")]
     pub id: u32,
@@ -31,7 +31,7 @@ pub struct Topic {
     pub offer: Offer,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
 pub struct Offer {
     pub dealer_name: Option<String>,
     pub url: Option<String>,
@@ -111,7 +111,7 @@ pub fn match_deals(deals: Deals, config: Config) {
                         .unwrap(),
                 );
                 db::insert(&deal_hash);
-                mail::send(topic, &posts, &config);
+                mail::send(topic, &posts, expression, &config);
             }
         }
     }
