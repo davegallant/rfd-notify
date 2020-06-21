@@ -6,7 +6,7 @@ use sendgrid::{Destination, Mail};
 
 const RFD_FORUMS_BASE_URL: &str = "https://forums.redflagdeals.com";
 
-pub fn send(topic: &Topic, posts: &Posts, config: &Config) {
+pub fn send(topic: &Topic, posts: &Posts, expression: &str, config: &Config) {
     let api_key = &config.sendgrid.api_key;
     let sg = SGClient::new(api_key.to_string());
 
@@ -14,21 +14,27 @@ pub fn send(topic: &Topic, posts: &Posts, config: &Config) {
         "\
     <b>First Posted:</b> {}
     <br>
-    <b>DEALER:</b> {:?}
+    <b>DEALER:</b> {}
     <br>
-    <b>DEAL:</b> {:?}
+    <b>DEAL:</b> {}
     <br>
     <b>POST:</b> {}\
     <br>
     <br>
     <b>Body:</b> {}
+    <br>
+    <br>
+    <b>Matched by expression:</b> {}
     ",
         topic.post_time,
-        topic.offer.dealer_name,
-        topic.offer.url,
+        topic.offer.dealer_name.as_ref().unwrap_or(&"".to_string()),
+        topic.offer.url.as_ref().unwrap_or(&"".to_string()),
         format!("{}/{}", RFD_FORUMS_BASE_URL, topic.web_path),
         posts.posts[0].body,
+        expression,
     );
+
+    debug!("{}", html_message);
 
     let mail_info = Mail::new()
         .add_to(Destination {
