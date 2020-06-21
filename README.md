@@ -1,12 +1,15 @@
 # rfd-notify
 
+This tool looks for regular expressions from [RedFlagDeals.com forums](https://forums.redflagdeals.com/hot-deals-f9/) and will send emails based on matches.
+
+
 ## requirements
 
 - a free [SendGrid API key](https://sendgrid.com/pricing/)
 
 ## use
 
-Declare a configuration in [config.toml](./examples/config.toml)
+Declare a configuration. An example can found in [config.toml](./examples/config.toml)
 
 ```shell
 rfd-notify ./examples/config.toml

@@ -27,11 +27,14 @@ pub struct Sendgrid {
 }
 
 pub fn parse(filename: &str) -> Config {
-    let contents = fs::read_to_string(filename).expect(&format!(
-        "Unable to read configuration file '{}'",
-        &filename
-    ));
-    let config: Config = toml::from_str(&contents).expect("Unable to parse configuration");
+    let contents = fs::read_to_string(filename)
+        .unwrap_or_else(|e| panic!("Unable to read configuration file '{}'. {}", filename, e));
+    let config: Config = toml::from_str(&contents).unwrap_or_else(|e| {
+        panic!(
+            "Unable to parse configuration with contents: {}. {}",
+            contents, e
+        )
+    });
 
-    return config;
+    config
 }

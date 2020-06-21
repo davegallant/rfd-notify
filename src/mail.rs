@@ -4,7 +4,7 @@ use crate::rfd::Topic;
 use sendgrid::SGClient;
 use sendgrid::{Destination, Mail};
 
-const RFD_FORUMS_BASE_URL: &'static str = "https://forums.redflagdeals.com";
+const RFD_FORUMS_BASE_URL: &str = "https://forums.redflagdeals.com";
 
 pub fn send(topic: &Topic, posts: &Posts, config: &Config) {
     let api_key = &config.sendgrid.api_key;

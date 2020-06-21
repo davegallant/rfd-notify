@@ -1,5 +1,3 @@
-use sled;
-
 pub fn hash_exists(hash: &str) -> bool {
     let tree = sled::open("./deals_db").expect("open");
     let result = tree.get(hash);
@@ -9,7 +7,7 @@ pub fn hash_exists(hash: &str) -> bool {
     if result == Ok(None) {
         return false;
     }
-    return true;
+    true
 }
 
 pub fn insert(hash: &str) {

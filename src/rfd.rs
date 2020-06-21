@@ -4,7 +4,6 @@ use crate::mail;
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
 use regex::RegexBuilder;
-use reqwest;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -60,20 +59,18 @@ pub async fn get_topic(topic_id: u32) -> Result<String, Box<dyn std::error::Erro
 }
 
 pub fn parse_hot_deals(response: &str) -> Deals {
-    return serde_json::from_str(&response).unwrap();
+    serde_json::from_str(&response).unwrap()
 }
 
 pub fn parse_posts(response: String) -> Posts {
-    return serde_json::from_str(&response).unwrap();
+    serde_json::from_str(&response).unwrap()
 }
 
 fn hash_deal(topic: &Topic) -> String {
     let digest = format!("{}{}{}", topic.web_path, topic.title, topic.post_time);
     let mut hasher = Sha256::new();
     hasher.input_str(&digest);
-    let hash = hasher.result_str();
-
-    return hash;
+    hasher.result_str()
 }
 
 pub fn match_deals(deals: Deals, config: Config) {
@@ -83,23 +80,21 @@ pub fn match_deals(deals: Deals, config: Config) {
             let re = RegexBuilder::new(expression)
                 .case_insensitive(true)
                 .build()
-                .expect(&format!("Invalid regex {}", expression));
+                .unwrap_or_else(|e| panic!("Invalid regex: {}. {}", expression, e));
             if re.is_match(&topic.title) {
                 found_match = true;
                 debug!(
                     "Expression '{}' matched title: {}",
                     expression, &topic.title
                 )
-            } else {
-                if topic.offer.dealer_name.is_some() {
-                    let dealer_name = topic.offer.dealer_name.as_ref().unwrap();
-                    if re.is_match(&dealer_name) {
-                        found_match = true;
-                        debug!(
-                            "Expression '{}' matched dealer: {}",
-                            expression, &topic.title
-                        )
-                    }
+            } else if topic.offer.dealer_name.is_some() {
+                let dealer_name = topic.offer.dealer_name.as_ref().unwrap();
+                if re.is_match(&dealer_name) {
+                    found_match = true;
+                    debug!(
+                        "Expression '{}' matched dealer: {}",
+                        expression, &topic.title
+                    )
                 }
             }
             if !found_match {
