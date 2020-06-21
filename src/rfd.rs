@@ -35,7 +35,7 @@ pub struct Topic {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Offer {
     pub dealer_name: Option<String>,
-    pub url: String,
+    pub url: Option<String>,
 }
 
 #[tokio::main]
@@ -59,7 +59,7 @@ pub async fn get_topic(topic_id: u32) -> Result<String, Box<dyn std::error::Erro
     Ok(resp)
 }
 
-pub fn parse_hot_deals(response: String) -> Deals {
+pub fn parse_hot_deals(response: &str) -> Deals {
     return serde_json::from_str(&response).unwrap();
 }
 

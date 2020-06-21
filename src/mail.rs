@@ -14,7 +14,9 @@ pub fn send(topic: &Topic, posts: &Posts, config: &Config) {
         "\
     <b>First Posted:</b> {}
     <br>
-    <b>DEAL:</b> {}
+    <b>DEALER:</b> {:?}
+    <br>
+    <b>DEAL:</b> {:?}
     <br>
     <b>POST:</b> {}\
     <br>
@@ -22,6 +24,7 @@ pub fn send(topic: &Topic, posts: &Posts, config: &Config) {
     <b>Body:</b> {}
     ",
         topic.post_time,
+        topic.offer.dealer_name,
         topic.offer.url,
         format!("{}/{}", RFD_FORUMS_BASE_URL, topic.web_path),
         posts.posts[0].body,
