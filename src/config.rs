@@ -2,6 +2,17 @@ extern crate toml;
 use serde_derive::Deserialize;
 use std::fs;
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_config() {
+        let file = "./examples/config.toml";
+        parse(&file);
+    }
+}
+
 #[derive(Deserialize, Debug)]
 pub struct Config {
     pub expressions: Vec<String>,
@@ -15,7 +26,7 @@ pub struct Sendgrid {
     pub api_key: String,
 }
 
-pub fn parse(filename: &String) -> Config {
+pub fn parse(filename: &str) -> Config {
     let contents = fs::read_to_string(filename).expect(&format!(
         "Unable to read configuration file '{}'",
         &filename
