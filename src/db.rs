@@ -1,5 +1,13 @@
+fn get_config() -> sled::Config {
+    sled::Config::default()
+        .path("./deals_db".to_owned())
+        .cache_capacity(100_000_000)
+        .flush_every_ms(Some(1000))
+}
+
 pub fn hash_exists(hash: &str) -> bool {
-    let tree = sled::open("./deals_db").expect("open");
+    let db = get_config();
+    let tree = db.open().unwrap();
     let result = tree.get(hash);
     if result.is_err() {
         error!("{:?}", &result);
@@ -11,7 +19,8 @@ pub fn hash_exists(hash: &str) -> bool {
 }
 
 pub fn insert(hash: &str) {
-    let tree = sled::open("./deals_db").expect("open");
+    let db = get_config();
+    let tree = db.open().unwrap();
     let result = tree.insert(&hash, "");
     if result.is_err() {
         error!("{:?}", &result);
