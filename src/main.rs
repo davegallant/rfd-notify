@@ -16,12 +16,20 @@ fn main() {
     let app = App::new("rfd-notify")
         .version("0.1.0")
         .about("Send emails based on regular expressions")
-        .args(&[Arg::with_name("config")
-            .required(true)
-            .takes_value(true)
-            .short("c")
-            .help("Specify path to config")
-            .long("config")]);
+        .args(&[
+            Arg::with_name("config")
+                .required(true)
+                .takes_value(true)
+                .short("c")
+                .help("Specify path to config")
+                .long("config"),
+            Arg::with_name("dbpath")
+                .default_value("./deals_db")
+                .takes_value(true)
+                .short("d")
+                .help("Specify path to where the embedded database is stored")
+                .long("dbpath"),
+        ]);
 
     let matches = app.get_matches();
 
@@ -31,6 +39,10 @@ fn main() {
     debug!("{:?}\n", parsed_config);
     let hot_deals = rfd::get_hot_deals().map_err(|err| error!("{:?}", err)).ok();
     let parsed_deals = rfd::parse_hot_deals(&hot_deals.unwrap());
-    rfd::match_deals(parsed_deals, parsed_config);
+    rfd::match_deals(
+        parsed_deals,
+        parsed_config,
+        matches.value_of("dbpath").unwrap(),
+    );
     info!("Complete")
 }
