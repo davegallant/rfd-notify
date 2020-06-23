@@ -73,7 +73,7 @@ fn hash_deal(topic: &Topic) -> String {
     hasher.result_str()
 }
 
-pub fn match_deals(deals: Deals, config: Config) {
+pub fn match_deals(deals: Deals, config: Config, dbpath: &str) {
     for topic in deals.topics.iter() {
         for expression in config.expressions.iter() {
             let mut found_match = false;
@@ -101,7 +101,7 @@ pub fn match_deals(deals: Deals, config: Config) {
                 continue;
             }
             let deal_hash = hash_deal(topic);
-            if db::hash_exists(&deal_hash) {
+            if db::hash_exists(&deal_hash, db::get_config(dbpath)) {
                 debug!("deal hash '{}' already exists", &deal_hash);
             } else {
                 let posts = parse_posts(
@@ -110,7 +110,7 @@ pub fn match_deals(deals: Deals, config: Config) {
                         .ok()
                         .unwrap(),
                 );
-                db::insert(&deal_hash);
+                db::insert(&deal_hash, db::get_config(dbpath));
                 mail::send(topic, &posts, expression, &config);
             }
         }

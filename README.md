@@ -16,7 +16,7 @@ This tool looks for regular expressions from [RedFlagDeals.com forums](https://f
 Declare a configuration. An example can found in [config.toml](./examples/config.toml)
 
 ```shell
-rfd-notify ./examples/config.toml
+rfd-notify --config ./examples/config.toml
 ```
 
 ## cross compile
