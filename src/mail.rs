@@ -12,13 +12,16 @@ pub fn send(topic: &Topic, posts: &Posts, expression: &str, config: &Config) {
 
     let html_message = format!(
         "\
-    <b>First Posted:</b> {}
+    <b>Date:</b> {}
     <br>
-    <b>DEALER:</b> {}
     <br>
-    <b>DEAL:</b> {}
+    <b>Dealer:</b> {}
     <br>
-    <b>POST:</b> {}\
+    <br>
+    <b>Deal:</b> {}
+    <br>
+    <br>
+    <b>Post:</b> {}\
     <br>
     <br>
     <b>Body:</b> {}
