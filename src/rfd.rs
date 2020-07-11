@@ -83,7 +83,7 @@ pub fn match_deals(deals: Deals, config: Config, dbpath: &str) {
                 .unwrap_or_else(|e| panic!("Invalid regex: {}. {}", expression, e));
             if re.is_match(&topic.title) {
                 found_match = true;
-                debug!(
+                info!(
                     "Expression '{}' matched title: {}",
                     expression, &topic.title
                 )
@@ -91,7 +91,7 @@ pub fn match_deals(deals: Deals, config: Config, dbpath: &str) {
                 let dealer_name = topic.offer.dealer_name.as_ref().unwrap();
                 if re.is_match(&dealer_name) {
                     found_match = true;
-                    debug!(
+                    info!(
                         "Expression '{}' matched dealer: {}",
                         expression, &topic.title
                     )
@@ -102,7 +102,7 @@ pub fn match_deals(deals: Deals, config: Config, dbpath: &str) {
             }
             let deal_hash = hash_deal(topic);
             if db::hash_exists(&deal_hash, db::get_config(dbpath)) {
-                debug!("deal hash '{}' already exists", &deal_hash);
+                info!("deal hash '{}' already exists", &deal_hash);
             } else {
                 let posts = parse_posts(
                     get_topic(topic.id)

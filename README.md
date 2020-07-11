@@ -13,15 +13,36 @@ This tool looks for regular expressions from [RedFlagDeals.com forums](https://f
 
 ## use
 
-Declare a configuration. An example can found in [config.toml](./examples/config.toml)
+```shell
+USAGE:
+    rfd-notify [OPTIONS] --config <config>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -c, --config <config>    Specify path to config
+    -d, --dbpath <dbpath>    Specify path to where the embedded database is stored [default: ./deals_db]
+```
+
+### docker
 
 ```shell
-rfd-notify --config ./examples/config.toml
+# Run the docker image using an example config:
+docker run -e RUST_LOG=INFO davegallant/rfd-notify -c /examples/config.toml
+```
+
+Provide a custom configuration. An example can found in [config.toml](./examples/config.toml)
+
+```shell
+# Provide a custom config that is in the current directory
+docker run -e RUST_LOG=INFO -v "$PWD":/tmp davegallant/rfd-notify -c /tmp/custom_config.toml
 ```
 
 ## cross compile
 
-I had motivations to run this on a Raspberry Pi Zero:
+I had motivations to run this on a Raspberry Pi Zero (without needing docker on the pi):
 
 ```shell
 alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src messense/rust-musl-cross:arm-musleabihf'
