@@ -8,4 +8,4 @@ expressions = [
 [sendgrid]
 api_key = "<SENDGRID-API-KEY>"
 mail_to = "<YOUR-EMAIL>@gmail.com"
-mail_from = "Notify <notify@rfdharvester.net>"
+mail_from = "Notify <notify@rfd-notify.org>"
