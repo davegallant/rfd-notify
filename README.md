@@ -36,8 +36,9 @@ docker run -e RUST_LOG=INFO davegallant/rfd-notify -c /examples/config.toml
 Provide a custom configuration. An example can found in [config.toml](./examples/config.toml)
 
 ```shell
-# Provide a custom config that is in the current directory
-docker run -e RUST_LOG=INFO -v "$PWD":/tmp davegallant/rfd-notify -c /tmp/custom_config.toml
+# Provide a custom-config.toml that is in the current directory
+# ensuring the correct user is mapped to the working directory
+docker run -u "$(id -u):$(id -g)" -w=/tmp -e RUST_LOG=INFO -v "$PWD":/tmp davegallant/rfd-notify -c /tmp/custom-config.toml
 ```
 
 ## cross compile
