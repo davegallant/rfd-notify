@@ -1,3 +1,4 @@
+use std::env;
 extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
@@ -11,7 +12,7 @@ mod rfd;
 use clap::{App, Arg};
 
 fn main() {
-    pretty_env_logger::init();
+    setup_logging();
 
     debug!("Starting rfd-notify");
 
@@ -49,4 +50,16 @@ fn main() {
         matches.value_of("dbpath").unwrap(),
     );
     info!("Complete")
+}
+
+fn setup_logging() {
+    debug!("Setting up logging.");
+
+    if env::var("RUST_LOG").is_err() {
+        env::set_var("RUST_LOG", "info");
+    }
+
+    debug!("{} is set to {:?}", "RUST_LOG", env::var("RUST_LOG"));
+
+    pretty_env_logger::init()
 }
