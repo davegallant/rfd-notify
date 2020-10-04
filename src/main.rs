@@ -17,7 +17,7 @@ fn main() {
     debug!("Starting rfd-notify");
 
     let app = App::new("rfd-notify")
-        .version("0.1.1")
+        .version("0.1.2")
         .about("Send emails based on regular expressions")
         .args(&[
             Arg::with_name("config")
