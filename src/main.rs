@@ -13,8 +13,10 @@ use clap::{App, Arg};
 fn main() {
     pretty_env_logger::init();
 
+    debug!("Starting rfd-notify");
+
     let app = App::new("rfd-notify")
-        .version("0.1.0")
+        .version("0.1.1")
         .about("Send emails based on regular expressions")
         .args(&[
             Arg::with_name("config")
@@ -30,6 +32,8 @@ fn main() {
                 .help("Specify path to where the embedded database is stored")
                 .long("dbpath"),
         ]);
+
+    debug!("Finding matches...");
 
     let matches = app.get_matches();
 
