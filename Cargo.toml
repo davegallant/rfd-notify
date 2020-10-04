@@ -1,6 +1,6 @@
 [package]
 name = "rfd-notify"
-version = "0.1.0"
+version = "0.1.2"
 authors = ["Dave Gallant <davegallant@gmail.com>"]
 edition = "2018"
 
