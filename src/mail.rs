@@ -50,6 +50,6 @@ pub fn send(topic: &Topic, posts: &Posts, expression: &str, config: &Config) {
 
     match sg.send(mail_info) {
         Err(err) => println!("SendGrid failed to send mail. Error: {}", err),
-        Ok(body) => println!("SendGrid Response: {}", body),
+        Ok(body) => println!("SendGrid Response: {:?}", body),
     };
 }
