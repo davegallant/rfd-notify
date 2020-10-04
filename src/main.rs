@@ -1,3 +1,4 @@
+use std::env;
 extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
@@ -11,10 +12,12 @@ mod rfd;
 use clap::{App, Arg};
 
 fn main() {
-    pretty_env_logger::init();
+    setup_logging();
+
+    debug!("Starting rfd-notify");
 
     let app = App::new("rfd-notify")
-        .version("0.1.0")
+        .version("0.1.1")
         .about("Send emails based on regular expressions")
         .args(&[
             Arg::with_name("config")
@@ -31,6 +34,8 @@ fn main() {
                 .long("dbpath"),
         ]);
 
+    debug!("Finding matches...");
+
     let matches = app.get_matches();
 
     let config = matches.value_of("config").unwrap();
@@ -45,4 +50,16 @@ fn main() {
         matches.value_of("dbpath").unwrap(),
     );
     info!("Complete")
+}
+
+fn setup_logging() {
+    debug!("Setting up logging.");
+
+    if env::var("RUST_LOG").is_err() {
+        env::set_var("RUST_LOG", "info");
+    }
+
+    debug!("{} is set to {:?}", "RUST_LOG", env::var("RUST_LOG"));
+
+    pretty_env_logger::init()
 }
