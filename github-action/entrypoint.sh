@@ -1,4 +1,5 @@
 #!/bin/sh -l
 
-echo "$1"
-eval "$1"
+echo "Starting rfd-notify with config: $1"
+
+rfd-notify -c "$1"

@@ -1,5 +1,3 @@
 FROM davegallant/rfd-notify
 
-COPY entrypoint.sh /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/rfd-notify", "-c", "config.toml"]
