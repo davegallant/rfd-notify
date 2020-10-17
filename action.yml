@@ -1,0 +1,13 @@
+# action.yml
+name: 'rfd-notify'
+description: 'get notified of deals based on regex'
+inputs:
+  config:
+    description: 'Path to configuration file'
+    required: true
+    default: 'config.toml'
+runs:
+  using: 'docker'
+  image: 'github-action/Dockerfile'
+  args:
+    - ${{ inputs.config }}
