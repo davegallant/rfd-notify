@@ -39,7 +39,7 @@ fn main() {
     let matches = app.get_matches();
 
     let config = matches.value_of("config").unwrap();
-    let parsed_config = config::parse(config);
+    let parsed_config = config::load(config);
 
     info!("{:?}\n", parsed_config);
     let hot_deals = rfd::get_hot_deals().map_err(|err| error!("{:?}", err)).ok();

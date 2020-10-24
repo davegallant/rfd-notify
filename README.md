@@ -29,26 +29,14 @@ OPTIONS:
 
 ### docker
 
-```shell
-# Run the docker image using an example config:
-docker run -e RUST_LOG=INFO davegallant/rfd-notify -c /examples/config.toml
-```
-
-Provide a custom configuration. An example can found in [config.toml](./examples/config.toml)
+Provide a custom configuration. An example can found in [config.yaml](./examples/config.yaml).
 
 ```shell
-# Provide a custom-config.toml that is in the current directory
+# Provide a custom-config.yaml that is in the current directory
 # ensuring the correct user is mapped to the working directory
-docker run -u "$(id -u):$(id -g)" -w=/tmp -e RUST_LOG=INFO -v "$PWD":/tmp davegallant/rfd-notify -c /tmp/custom-config.toml
+docker run -u "$(id -u):$(id -g)" -w=/tmp -e RUST_LOG=INFO -v "$PWD":/tmp davegallant/rfd-notify -c /tmp/custom-config.yaml
 ```
 
-## cross compile
+## github action
 
-I had motivations to run this on a Raspberry Pi Zero (without needing docker on the pi):
-
-```shell
-alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src messense/rust-musl-cross:arm-musleabihf'
-rust-musl-builder cargo build --release
-```
-
-The above can be substituted for [other architectures](https://github.com/messense/rust-musl-cross#prebuilt-images).
+TBD
