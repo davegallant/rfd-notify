@@ -1,0 +1,7 @@
+name: 'rfd-notify'
+description: 'get notified of deals based on regex'
+icon: command
+color: gray-dark
+runs:
+  using: 'docker'
+  image: 'github-action/Dockerfile'
