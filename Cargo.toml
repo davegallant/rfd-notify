@@ -18,7 +18,7 @@ rust-crypto = "^0.2"
 sled = "0.34.6"
 clap = "2.33.3"
 envconfig = "0.10.0"
-envconfig_derive = "0.9.1"
+envconfig_derive = "0.10.0"
 serde_yaml = "0.8"
 
 [dev-dependencies]
