@@ -27,6 +27,16 @@ OPTIONS:
     -d, --dbpath <dbpath>    Specify path to where the embedded database is stored [default: ./deals_db]
 ```
 
+## Environment Variables
+
+The following environment variables are required:
+
+| VARIABLE            | DESCRIPTION                                                      |
+| ------------------- | ---------------------------------------------------------------- |
+| SENDGRID_API_KEY    | Key can be created at https://app.sendgrid.com/settings/api_keys |
+| SENDGRID_MAIL_FROM  | The email address that the email is sent from                    |
+| SENDGRID_MAIL_TO    | The email address to notify                                      |
+
 ## Github action
 
 An action can be setup to scan for deals, send a notification and store previously found deals in the repo.
