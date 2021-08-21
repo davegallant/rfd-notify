@@ -35,7 +35,10 @@ An action can be setup to scan for deals, send a notification and store previous
 
 This action can be run on a cron and can store the embedded database by commiting the files to git.
 
+An example of this running can be found at [rfd-notify-action](https://github.com/davegallant/rfd-notify-action).
+
 It also requires the corresponding [encrypted secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets) setup.
+
 
 ```yaml
 # .github/workflows/main.yml
@@ -51,20 +54,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+          fetch-depth: 0 # speed boost
+
       - name: Run rfd-notify
-        uses: davegallant/rfd-notify@v0.2.0
+        uses: davegallant/rfd-notify@main
         env:
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           SENDGRID_MAIL_FROM: notify@rfd-notify.org
           SENDGRID_MAIL_TO: ${{ secrets.SENDGRID_MAIL_TO }}
+
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.name "RFD Notify"
           git add deals_db/
           git commit -m "Add changes" -a || true
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
