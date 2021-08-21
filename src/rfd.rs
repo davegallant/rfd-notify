@@ -59,7 +59,7 @@ pub async fn get_topic(topic_id: u32) -> Result<String, Box<dyn std::error::Erro
 }
 
 pub fn parse_hot_deals(response: &str) -> Deals {
-    serde_json::from_str(&response).unwrap()
+    serde_json::from_str(response).unwrap()
 }
 
 pub fn parse_posts(response: String) -> Posts {
@@ -89,7 +89,7 @@ pub fn match_deals(deals: Deals, config: Config, dbpath: &str) {
                 )
             } else if topic.offer.dealer_name.is_some() {
                 let dealer_name = topic.offer.dealer_name.as_ref().unwrap();
-                if re.is_match(&dealer_name) {
+                if re.is_match(dealer_name) {
                     found_match = true;
                     info!(
                         "Expression '{}' matched dealer: {}",
