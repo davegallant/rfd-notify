@@ -1,4 +1,4 @@
-FROM rust@sha256:b2fd2fcc9d28c1a6dc59c3b0b37913fd9a326c8e457e50617e1156fc1ad51e34 as build
+FROM rust@sha256:f91b3dae52c0d99302366331e36cf6af8a923d36c68577df1f4d5a7c2721ca90 as build
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
