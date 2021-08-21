@@ -1,9 +1,7 @@
 # rfd-notify
 
-![](https://github.com/davegallant/rfd-notify/workflows/ci/badge.svg)
+[![Publish Container](https://github.com/davegallant/rfd-notify/actions/workflows/docker.yml/badge.svg)](https://github.com/davegallant/rfd-notify/actions/workflows/docker.yml)
 [![Dependabot](https://badgen.net/badge/Dependabot/enabled/green?icon=dependabot)](https://dependabot.com/)
-![Docker](https://img.shields.io/docker/pulls/davegallant/rfd-notify?style=plastic)
-
 
 This tool looks for regular expressions from [RedFlagDeals.com forums](https://forums.redflagdeals.com/hot-deals-f9/) and will send emails based on matches.
 
