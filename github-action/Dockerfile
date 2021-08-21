@@ -1,3 +1,3 @@
-FROM davegallant/rfd-notify:0.2.0
+FROM ghcr.io/davegallant/rfd-notify:latest
 
 ENTRYPOINT ["/rfd-notify", "-c", "config.yaml"]
