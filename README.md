@@ -27,7 +27,7 @@ OPTIONS:
     -d, --dbpath <dbpath>    Specify path to where the embedded database is stored [default: ./deals_db]
 ```
 
-## Environment Variables
+### Environment Variables
 
 The following environment variables are required:
 
