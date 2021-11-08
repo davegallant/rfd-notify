@@ -10,7 +10,7 @@ serde_derive = "1.0.112"
 serde = "1.0.130"
 reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
 tokio = { version = "1.13", features = ["full"] }
-serde_json = "1.0.68"
+serde_json = "1.0.69"
 log = "0.4"
 pretty_env_logger = "0.4.0"
 regex = "1.5.4"
