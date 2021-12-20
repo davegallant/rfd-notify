@@ -9,7 +9,7 @@ sendgrid = { version = "0.17.4", default-features = false, features = ["rustls",
 serde_derive = "1.0.112"
 serde = "1.0.132"
 reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
-tokio = { version = "1.13", features = ["full"] }
+tokio = { version = "1.15", features = ["full"] }
 serde_json = "1.0.68"
 log = "0.4"
 pretty_env_logger = "0.4.0"
