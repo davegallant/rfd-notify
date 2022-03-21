@@ -39,21 +39,14 @@ The following environment variables are required:
 
 An action can be setup to scan for deals, send a notification and store previously found deals in the repo.
 
-### Example
-
-This action can be run on a cron and can store the embedded database by commiting the files to git.
-
-An example of this running can be found at [rfd-notify-action](https://github.com/davegallant/rfd-notify-action).
-
 It also requires the corresponding [encrypted secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets) setup.
-
 
 ```yaml
 # .github/workflows/main.yml
 
 on:
  schedule:
-  - cron: '*/5 * * * *'
+  - cron: '*5 * * * *'
 jobs:
   rfd_notify:
     runs-on: ubuntu-latest
