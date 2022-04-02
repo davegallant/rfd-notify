@@ -10,6 +10,8 @@ pub fn send(topic: &Topic, posts: &Posts, expression: &str, config: &Config) {
     let api_key = &config.sendgrid.api_key;
     let sg = SGClient::new(api_key.to_string());
 
+    let web_path = format!("{}/{}", RFD_FORUMS_BASE_URL, topic.web_path);
+
     let html_message = format!(
         "\
     <b>Date:</b> {}
@@ -32,7 +34,7 @@ pub fn send(topic: &Topic, posts: &Posts, expression: &str, config: &Config) {
         topic.post_time,
         topic.offer.dealer_name.as_ref().unwrap_or(&"".to_string()),
         topic.offer.url.as_ref().unwrap_or(&"".to_string()),
-        format!("{}/{}", RFD_FORUMS_BASE_URL, topic.web_path),
+        web_path,
         posts.posts[0].body,
         expression,
     );

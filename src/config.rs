@@ -22,7 +22,7 @@ mod tests {
     fn load_config_with_missing_sendgrid_api_key() {
         std::env::remove_var("SENDGRID_API_KEY");
         let file = "./examples/config.yaml";
-        load(&file);
+        load(file);
     }
 
     #[test]
@@ -32,7 +32,7 @@ mod tests {
         std::env::set_var("SENDGRID_API_KEY", "FAKE");
         std::env::set_var("SENDGRID_MAIL_FROM", "notify@rfd-notify.org");
         std::env::set_var("SENDGRID_MAIL_TO", "test@email.com");
-        load(&file);
+        load(file);
     }
 }
 
