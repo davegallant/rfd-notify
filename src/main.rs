@@ -21,6 +21,7 @@ fn main() {
         .about("Send emails based on regular expressions")
         .args(&[
             Arg::with_name("config")
+                 .default_value("./config.yml")
                 .required(true)
                 .takes_value(true)
                 .short("c")
