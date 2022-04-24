@@ -1,4 +1,4 @@
-FROM rust:1.54-buster as build
+FROM rust:1.60.0-buster as build
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -22,14 +22,8 @@ ENV PKG_CONFIG_ALLOW_CROSS=1
 
 RUN cargo build --target=x86_64-unknown-linux-musl --release
 
-RUN mkdir /examples
-
-COPY examples /examples
-
 ### Final lightweight image
 FROM scratch
-
-COPY --from=build /examples /examples
 
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=build /usr/src/rfd-notify/target/x86_64-unknown-linux-musl/release/rfd-notify ./rfd-notify
