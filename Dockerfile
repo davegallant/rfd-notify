@@ -1,4 +1,4 @@
-FROM rust:1.54-buster@sha256:f91b3dae52c0d99302366331e36cf6af8a923d36c68577df1f4d5a7c2721ca90 as build
+FROM rust:1.54-buster as build
 
 ENV DEBIAN_FRONTEND=noninteractive
 
