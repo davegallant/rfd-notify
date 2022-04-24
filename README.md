@@ -35,7 +35,50 @@ The following environment variables are required:
 | SENDGRID_MAIL_FROM  | The email address that the email is sent from                    |
 | SENDGRID_MAIL_TO    | The email address to notify                                      |
 
-## Github action
+## Example Configuration
+
+The following configuration can be passed to `rfd-notify`:
+
+```yaml
+# config.yml
+expressions:
+ - "rx.?5[6789]0"
+ - pizza
+ - starbucks
+```
+
+## Drone CI
+
+The following works on [Drone CI](https://www.drone.io/):
+
+
+```yaml
+# .drone.yml
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+
+- name: run rfd-notify
+  image: ghcr.io/davegallant/rfd-notify
+  environment:
+   SENDGRID_API_KEY:
+    from_secret: sendgrid_api_key
+   SENDGRID_MAIL_FROM: notify@rfd-notify.org
+   SENDGRID_MAIL_TO: example@example.com
+
+- name: commit db changes
+  image: appleboy/drone-git-push
+  settings:
+    branch: main
+    remote_name: origin
+    force: false
+    commit: true
+```
+
+## Github Action
 
 An action can be setup to scan for deals, send a notification and store previously found deals in the repo.
 
