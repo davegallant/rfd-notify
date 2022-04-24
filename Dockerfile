@@ -25,8 +25,6 @@ RUN cargo build --target=x86_64-unknown-linux-musl --release
 ### Final lightweight image
 FROM scratch
 
-COPY --from=build /examples /examples
-
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=build /usr/src/rfd-notify/target/x86_64-unknown-linux-musl/release/rfd-notify ./rfd-notify
 
