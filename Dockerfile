@@ -22,10 +22,6 @@ ENV PKG_CONFIG_ALLOW_CROSS=1
 
 RUN cargo build --target=x86_64-unknown-linux-musl --release
 
-RUN mkdir /examples
-
-COPY examples /examples
-
 ### Final lightweight image
 FROM scratch
 
