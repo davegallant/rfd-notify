@@ -9,11 +9,11 @@ sendgrid = { version = "0.17.4", default-features = false, features = ["rustls",
 serde_derive = "1.0.112"
 serde = "1.0.136"
 reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
-tokio = { version = "1.15", features = ["full"] }
+tokio = { version = "1.18", features = ["full"] }
 serde_json = "1.0.68"
 log = "0.4"
 pretty_env_logger = "0.4.0"
-regex = "1.5.4"
+regex = "1.5.6"
 rust-crypto = "^0.2"
 sled = "0.34.7"
 clap = "3.1.12"
