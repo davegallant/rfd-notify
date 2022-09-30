@@ -42,7 +42,7 @@ pub struct Config {
     pub sendgrid: SendgridConfig,
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, PartialEq, Eq)]
 pub struct ConfigFile {
     pub expressions: Vec<String>,
 }
