@@ -896,9 +896,9 @@ dependencies = [
 
 [[package]]
 name = "sendgrid"
-version = "0.17.4"
+version = "0.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "88afc7511b68247bf469e0dff55eb7ef305aab293211242695fd07cc17e36a78"
+checksum = "fd6ba8c048dc4beab827cebc1d54f1007f5ebdfa240812ed6faa89452fd34ba0"
 dependencies = [
  "data-encoding",
  "reqwest",
