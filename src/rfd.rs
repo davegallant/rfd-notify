@@ -1,10 +1,9 @@
 use crate::config::Config;
 use crate::db;
 use crate::mail;
-use crypto::digest::Digest;
-use crypto::sha2::Sha256;
 use regex::RegexBuilder;
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 
 #[derive(Serialize, Deserialize)]
 pub struct Deals {
@@ -69,8 +68,9 @@ pub fn parse_posts(response: String) -> Posts {
 fn hash_deal(topic: &Topic) -> String {
     let digest = format!("{}{}{}", topic.web_path, topic.title, topic.post_time);
     let mut hasher = Sha256::new();
-    hasher.input_str(&digest);
-    hasher.result_str()
+    hasher.update(digest);
+    let result: String = format!("{:X}", hasher.finalize());
+    result
 }
 
 pub fn match_deals(deals: Deals, config: Config, dbpath: &str) {

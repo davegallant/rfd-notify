@@ -3,7 +3,6 @@ extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
 extern crate clap;
-extern crate crypto;
 mod config;
 mod db;
 mod mail;
