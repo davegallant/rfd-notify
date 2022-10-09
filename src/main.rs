@@ -14,14 +14,13 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-   // Specify path to config
-   #[arg(short, long, default_value = "./config.yml")]
-   config: String,
+    // Specify path to config
+    #[arg(short, long, default_value = "./config.yml")]
+    config: String,
 
-   // Specify path to where the embedded database is stored
-   #[arg(short, long, default_value = "./deals_db")]
-   dbpath: String,
-
+    // Specify path to where the embedded database is stored
+    #[arg(short, long, default_value = "./deals_db")]
+    dbpath: String,
 }
 
 fn main() {
@@ -38,11 +37,7 @@ fn main() {
     info!("{:?}\n", parsed_config);
     let hot_deals = rfd::get_hot_deals().map_err(|err| error!("{:?}", err)).ok();
     let parsed_deals = rfd::parse_hot_deals(&hot_deals.unwrap());
-    rfd::match_deals(
-        parsed_deals,
-        parsed_config,
-        &args.dbpath,
-    );
+    rfd::match_deals(parsed_deals, parsed_config, &args.dbpath);
     info!("Complete")
 }
 
