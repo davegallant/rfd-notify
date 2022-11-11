@@ -19,7 +19,7 @@ pub fn hash_exists(hash: &str, config: sled::Config) -> bool {
 
 pub fn insert(hash: &str, config: sled::Config) {
     let tree = config.open().unwrap();
-    let result = tree.insert(&hash, "");
+    let result = tree.insert(hash, "");
     if result.is_err() {
         error!("{:?}", &result);
     }
