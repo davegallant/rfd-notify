@@ -53,7 +53,7 @@ pub fn send(topic: &Topic, posts: &Posts, expression: &str, config: &Config) {
     debug!("Sending email notification.");
 
     match sg.send(mail_info) {
-        Err(err) => println!("SendGrid failed to send mail. Error: {}", err),
-        Ok(body) => println!("SendGrid Response: {:?}", body),
+        Err(err) => println!("SendGrid failed to send mail. Error: {err}"),
+        Ok(body) => println!("SendGrid Response: {body:?}"),
     };
 }
