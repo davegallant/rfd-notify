@@ -48,8 +48,7 @@ pub async fn get_hot_deals() -> Result<String, Box<dyn std::error::Error>> {
 #[tokio::main]
 pub async fn get_topic(topic_id: u32) -> Result<String, Box<dyn std::error::Error>> {
     let resp = reqwest::get(&format!(
-        "https://forums.redflagdeals.com/api/topics/{}/posts?per_page=1&page=1",
-        topic_id
+        "https://forums.redflagdeals.com/api/topics/{topic_id}/posts?per_page=1&page=1"
     ))
     .await?
     .text()
