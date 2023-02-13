@@ -1,4 +1,4 @@
-FROM rust:1.67.0-buster as build
+FROM rust:1.67.1-buster as build
 
 ENV DEBIAN_FRONTEND=noninteractive
 
