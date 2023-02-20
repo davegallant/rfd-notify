@@ -1,27 +1,29 @@
 import apprise
+from rfd import Topic
 
-def send_notification(servers: str) -> None:
+
+def send_notification(topic: Topic, expression: str, servers: str) -> None:
     apobj = apprise.Apprise()
     apobj.add(servers)
 
-    subject = title
+    subject = topic.title
     body = f"""\
-    <b>Date:</b> {}
+    <b>Date:</b> {topic.date}
     <br>
     <br>
-    <b>Dealer:</b> {}
+    <b>Dealer:</b> {topic.dealer_name}
     <br>
     <br>
-    <b>Deal:</b> {}
+    <b>Deal:</b> {topic.title}
     <br>
     <br>
-    <b>Post:</b> {}\
+    <b>Post:</b> {topic.url}\
     <br>
     <br>
-    <b>Body:</b> {}
+    <b>Body:</b> {topic.body}
     <br>
     <br>
-    <b>Matched by expression:</b> {}
+    <b>Matched by expression:</b> {expression}
     """
 
     apobj.notify(

@@ -1,25 +1,23 @@
-import requests
-from constants import API_BASE_URL
 from json.decoder import JSONDecodeError
-from loguru import logger
-
 from typing import List, Dict
+import requests
+from loguru import logger
+from constants import API_BASE_URL
 
 
-class Thread:
+class Topic:
     def __init__(self, title, dealer_name, url, external_url, views):
         self.dealer_name = dealer_name
         self.title = title
         self.url = url
         self.external_url = external_url
-        self.views = views
 
     def __repr__(self):
-        return f"Thread({self.title})"
+        return f"Topic({self.title})"
 
 
-def get_threads(forum_id: int, pages: int) -> List[Dict]:
-    threads = []
+def get_topics(forum_id: int, pages: int) -> List[Dict]:
+    topics = []
     try:
         for page in range(1, pages + 1):
             response = requests.get(
@@ -27,9 +25,9 @@ def get_threads(forum_id: int, pages: int) -> List[Dict]:
             )
             if response.status_code != 200:
                 raise Exception(
-                    f"When collecting threads, received a status code: {response.status_code}"
+                    f"When collecting topics, received a status code: {response.status_code}"
                 )
-            threads += response.json().get("topics")
+            topics += response.json().get("topics")
     except JSONDecodeError as err:
-        logger.error("Unable to decode threads. %s", err)
-    return threads
+        logger.error("Unable to decode topics. %s", err)
+    return topics

@@ -1,6 +1,8 @@
 import argparse
 
 from config import load_yaml_file
+from rfd import get_topics
+from loguru import logger
 
 
 def main() -> None:
@@ -15,3 +17,11 @@ def main() -> None:
     config_path = args.config
 
     config = load_yaml_file(config_path)
+
+    topics = get_topics(9, 2)
+
+    logger.debug(f"config: {config}")
+    # logger.debug(topics)
+
+
+main()
