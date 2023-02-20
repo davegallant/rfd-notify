@@ -10,7 +10,6 @@ repos:
       - id: check-merge-conflict
       - id: check-yaml
       - id: debug-statements
-        args: [--allow-missing-credentials]
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: pretty-format-json
