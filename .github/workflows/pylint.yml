@@ -19,4 +19,4 @@ jobs:
           poetry install
 
       - name: Lint
-        run: poetry run pylint ./rfd-notify
+        run: poetry run pylint ./rfd_notify
