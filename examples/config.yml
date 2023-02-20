@@ -1,5 +1,5 @@
 expressions:
  - amazon
  - costco
- - "rx.?5[6789]0"
+ - price error
  - starbucks
