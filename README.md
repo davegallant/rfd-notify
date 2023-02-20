@@ -42,40 +42,9 @@ The following configuration can be passed to `rfd-notify`:
 ```yaml
 # config.yml
 expressions:
- - "rx.?5[6789]0"
  - pizza
  - starbucks
-```
-
-## Drone CI
-
-The following works on [Drone CI](https://www.drone.io/):
-
-
-```yaml
-# .drone.yml
----
-kind: pipeline
-type: docker
-name: default
-
-steps:
-
-- name: run rfd-notify
-  image: ghcr.io/davegallant/rfd-notify
-  environment:
-   SENDGRID_API_KEY:
-    from_secret: sendgrid_api_key
-   SENDGRID_MAIL_FROM: notify@rfd-notify.org
-   SENDGRID_MAIL_TO: example@example.com
-
-- name: commit db changes
-  image: appleboy/drone-git-push
-  settings:
-    branch: main
-    remote_name: origin
-    force: false
-    commit: true
+ - price error
 ```
 
 ## Github Action
@@ -85,7 +54,7 @@ An action can be setup to scan for deals, send a notification and store previous
 It also requires the corresponding [encrypted secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets) setup.
 
 ```yaml
-# .github/workflows/main.yml
+# .github/workflows/rfd-notify.yml
 
 on:
  schedule:
@@ -119,4 +88,36 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+```
+
+
+## Drone CI
+
+The following works on [Drone CI](https://www.drone.io/):
+
+
+```yaml
+# .drone.yml
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+
+- name: run rfd-notify
+  image: ghcr.io/davegallant/rfd-notify
+  environment:
+   SENDGRID_API_KEY:
+    from_secret: sendgrid_api_key
+   SENDGRID_MAIL_FROM: notify@rfd-notify.org
+   SENDGRID_MAIL_TO: example@example.com
+
+- name: commit db changes
+  image: appleboy/drone-git-push:0.2.1
+  settings:
+    branch: main
+    remote_name: origin
+    force: false
+    commit: true
 ```
