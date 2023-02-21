@@ -18,10 +18,11 @@ def main() -> None:
 
     config = load_yaml_file(config_path)
 
-    topics = get_topics(9, 2)
+    topics = get_topics(forum_id=9, pages=2)
 
     logger.debug(f"config: {config}")
-    # logger.debug(topics)
+    for topic in topics:
+        logger.debug(topic)
 
 
 main()

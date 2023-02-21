@@ -16,5 +16,4 @@ repos:
         args: [--autofix]
       - id: trailing-whitespace
       - id: check-toml
-      - id: double-quote-string-fixer
       - id: pretty-format-json
