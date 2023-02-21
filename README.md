@@ -71,8 +71,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "RFD Notify"
-          git add deals_db/
-          git commit -m "Add changes" -a || true
+          git add previous_matches
+          git commit -m "Add matches" -a || true
 
       - name: Push changes
         uses: ad-m/github-push-action@master
