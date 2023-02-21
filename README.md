@@ -94,7 +94,7 @@ name: default
 
 steps:
   - name: run rfd-notify
-    image: ghcr.io/davegallant/rfd-notify
+    image: ghcr.io/davegallant/rfd-notify:1
     environment:
       APPRISE_URL:
         from_secret: apprise_url
