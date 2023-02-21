@@ -9,7 +9,7 @@ This was originally written before [alerts](https://www.redflagdeals.com/alerts/
 
 ## Prerequisites
 
-- a free [SendGrid API key](https://sendgrid.com/pricing/)
+- a free [SendGrid API key](https://sendgrid.com/pricing/) is suggested for email notifications
 
 ## Usage
 
@@ -30,11 +30,9 @@ OPTIONS:
 
 The following environment variables are required:
 
-| VARIABLE            | DESCRIPTION                                                      |
-| ------------------- | ---------------------------------------------------------------- |
-| SENDGRID_API_KEY    | Key can be created at https://app.sendgrid.com/settings/api_keys |
-| SENDGRID_MAIL_FROM  | The email address that the email is sent from                    |
-| SENDGRID_MAIL_TO    | The email address to notify                                      |
+| VARIABLE    | DESCRIPTION                                                      |
+| ----------- | ---------------------------------------------------------------- |
+| APPRISE_URL | Key can be created at https://app.sendgrid.com/settings/api_keys |
 
 ## Example Configuration
 
@@ -43,9 +41,9 @@ The following configuration can be passed to `rfd-notify`:
 ```yaml
 # config.yml
 expressions:
- - pizza
- - starbucks
- - price error
+  - pizza
+  - starbucks
+  - price error
 ```
 
 ## Github Action
@@ -58,8 +56,8 @@ It also requires the corresponding [encrypted secrets](https://docs.github.com/e
 # .github/workflows/rfd-notify.yml
 
 on:
- schedule:
-  - cron: '*5 * * * *'
+  schedule:
+    - cron: "*5 * * * *"
 jobs:
   rfd_notify:
     runs-on: ubuntu-latest
@@ -91,11 +89,9 @@ jobs:
           branch: ${{ github.ref }}
 ```
 
-
 ## Drone CI
 
 The following works on [Drone CI](https://www.drone.io/):
-
 
 ```yaml
 # .drone.yml
@@ -105,20 +101,19 @@ type: docker
 name: default
 
 steps:
+  - name: run rfd-notify
+    image: ghcr.io/davegallant/rfd-notify
+    environment:
+      SENDGRID_API_KEY:
+        from_secret: sendgrid_api_key
+      SENDGRID_MAIL_FROM: notify@rfd-notify.org
+      SENDGRID_MAIL_TO: example@example.com
 
-- name: run rfd-notify
-  image: ghcr.io/davegallant/rfd-notify
-  environment:
-   SENDGRID_API_KEY:
-    from_secret: sendgrid_api_key
-   SENDGRID_MAIL_FROM: notify@rfd-notify.org
-   SENDGRID_MAIL_TO: example@example.com
-
-- name: commit db changes
-  image: appleboy/drone-git-push:0.2.1
-  settings:
-    branch: main
-    remote_name: origin
-    force: false
-    commit: true
+  - name: commit db changes
+    image: appleboy/drone-git-push:0.2.1
+    settings:
+      branch: main
+      remote_name: origin
+      force: false
+      commit: true
 ```

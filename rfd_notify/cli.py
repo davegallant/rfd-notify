@@ -1,7 +1,7 @@
 import argparse
 
 from config import load_yaml_file
-from rfd import get_topics
+from rfd import get_topics, match_topics
 from loguru import logger
 
 
@@ -21,8 +21,7 @@ def main() -> None:
     topics = get_topics(forum_id=9, pages=2)
 
     logger.debug(f"config: {config}")
-    for topic in topics:
-        logger.debug(topic)
+    match_topics(topics, config)
 
 
 main()

@@ -1,4 +1,5 @@
 expressions:
  - price error
  - starbucks
+ - pizza
  - ontario(.*)grocery
