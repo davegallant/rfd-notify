@@ -1,5 +1,5 @@
 from json.decoder import JSONDecodeError
-from typing import List, Dict
+from typing import List, Any
 import re
 import shelve
 import requests
@@ -7,6 +7,9 @@ from loguru import logger
 from constants import API_BASE_URL
 
 from config import Config
+from notifications import send_notification
+from models.topic import Topic
+from models.post import Post
 
 
 class RfdTopicsException(Exception):
@@ -14,38 +17,25 @@ class RfdTopicsException(Exception):
         self.message = message
 
 
-class Offer:
-    def __init__(self, dealer_name, url):
-        self.dealer_name = dealer_name
-        self.url = url
-
-    def __repr__(self):
-        return f"Offer({self.url})"
-
-
-class Topic:
-    # pylint: disable=unused-argument
-    # pylint: disable=too-many-arguments
-    def __init__(
-        self,
-        topic_id: int,
-        title: str,
-        post_time: str,
-        web_path: str,
-        offer: Offer,
-        **kwargs,
-    ):
-        self.topic_id = topic_id
-        self.title = title
-        self.post_time = post_time
-        self.web_path = web_path
-        self.offer = offer
-
-    def __repr__(self):
-        return f"Topic({self.title})"
+def get_topic(topic_id: int) -> List[Post]:
+    posts = []
+    try:
+        response = requests.get(
+            f"{API_BASE_URL}/api/topics/{topic_id}/posts?per_page=1&page=1",
+            timeout=30,
+        )
+        if response.status_code != 200:
+            raise RfdTopicsException(
+                f"Received status code {response.status_code} when getting topic."
+            )
+        for post in response.json().get("posts"):
+            posts.append(Post(**post))
+    except JSONDecodeError as err:
+        logger.error("Unable to decode topics. %s", err)
+    return posts
 
 
-def get_topics(forum_id: int, pages: int) -> List[Dict]:
+def get_topics(forum_id: int, pages: int) -> List[Topic]:
     topics = []
     try:
         for page in range(1, pages + 1):
@@ -64,16 +54,16 @@ def get_topics(forum_id: int, pages: int) -> List[Dict]:
     return topics
 
 
-def look_for_matches(topics: List[Topic], config: Config, storage_path: str):
-    found_match = False
-
+def look_for_matches(
+    topics: List[Topic], config: Config, storage_path: str, apprise_url: Any
+):
     with shelve.open(storage_path) as previous_matches:
         for topic in topics:
-            logger.debug(topic)
+            found_match = False
             for expression in config.expressions:
                 expression = expression.lower()
                 topic_title = topic.title.lower()
-                dealer_name = topic.offer["dealer_name"].lower()
+                dealer_name = topic.offer.dealer_name.lower()
                 if re.search(expression, topic_title):
                     found_match = True
                     logger.debug(
@@ -87,8 +77,11 @@ def look_for_matches(topics: List[Topic], config: Config, storage_path: str):
                 if not found_match:
                     continue
                 if str(topic.topic_id) not in previous_matches:
+                    posts = get_topic(topic.topic_id)
                     previous_matches[str(topic.topic_id)] = 1
-                    # Send notifications
+                    send_notification(topic, posts, expression, apprise_url)
                 else:
-                    logger.debug(f"Already matched topic with title '{topic.title}'")
+                    logger.debug(
+                        f"Already matched topic '{topic.offer.dealer_name} - {topic.title}'"
+                    )
                 break

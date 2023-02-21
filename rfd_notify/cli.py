@@ -1,4 +1,5 @@
 import argparse
+import os
 
 from config import load_yaml_file
 from rfd import get_topics, look_for_matches
@@ -25,12 +26,15 @@ def main() -> None:
 
     config_path = args.config
 
+    apprise_url = os.getenv("APPRISE_URL")
+
     config = load_yaml_file(config_path)
 
     topics = get_topics(forum_id=9, pages=2)
 
     logger.debug(f"config: {config}")
-    look_for_matches(topics, config, args.storage_path)
+
+    look_for_matches(topics, config, args.storage_path, apprise_url)
 
 
 main()

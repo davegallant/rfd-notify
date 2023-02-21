@@ -16,5 +16,4 @@ def load_yaml_file(filename: str) -> Config:
             data = yaml.safe_load(file)
         except yaml.YAMLError as err:
             logger.error(f"Error loading config file: {err}")
-            return None
     return Config(**data)
