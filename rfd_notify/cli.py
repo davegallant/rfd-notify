@@ -1,7 +1,7 @@
 import argparse
 
 from config import load_yaml_file
-from rfd import get_topics, match_topics
+from rfd import get_topics, look_for_matches
 from loguru import logger
 
 
@@ -10,6 +10,15 @@ def main() -> None:
 
     parser.add_argument(
         "-c", "--config", type=str, required=True, help="path to configuration file"
+    )
+
+    parser.add_argument(
+        "-s",
+        "--storage-path",
+        type=str,
+        required=False,
+        default="previous_matches",
+        help="path to persistent storage",
     )
 
     args = parser.parse_args()
@@ -21,7 +30,7 @@ def main() -> None:
     topics = get_topics(forum_id=9, pages=2)
 
     logger.debug(f"config: {config}")
-    match_topics(topics, config)
+    look_for_matches(topics, config, args.storage_path)
 
 
 main()
