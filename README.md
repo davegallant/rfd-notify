@@ -58,9 +58,9 @@ jobs:
     name: rfd-notify
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # speed boost
+          fetch-depth: 0
 
       - name: Run rfd-notify
         uses: davegallant/rfd-notify@main
