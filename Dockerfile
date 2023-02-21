@@ -1,34 +1,23 @@
-FROM rust:1.67.1-buster as build
+FROM cgr.dev/chainguard/python:dev-3.11 as builder
 
-ENV DEBIAN_FRONTEND=noninteractive
+WORKDIR /app
 
-RUN apt update && \
-    apt -y install \
-    ca-certificates \
-    libssl-dev \
-    musl-tools \
-    musl-dev
+COPY pyproject.toml .
+COPY poetry.lock .
+COPY rfd_notify .
 
-RUN rustup target add x86_64-unknown-linux-musl
+RUN pip install poetry==1.3.2 && \
+  /home/nonroot/.local/bin/poetry export -f requirements.txt > /tmp/requirements.txt
 
-RUN update-ca-certificates
+RUN pip install -r /tmp/requirements.txt --user
 
-WORKDIR /usr/src/rfd-notify
+FROM cgr.dev/chainguard/python:3.11
 
-COPY Cargo.toml Cargo.toml
-COPY src src
+WORKDIR /app
 
-ENV PKG_CONFIG_ALLOW_CROSS=1
+# Make sure you update Python version in path
+COPY --from=builder /home/nonroot/.local/lib/python3.11/site-packages /home/nonroot/.local/lib/python3.11/site-packages
 
-RUN cargo build --target=x86_64-unknown-linux-musl --release
+COPY rfd_notify .
 
-### Final lightweight image
-FROM scratch
-
-COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=build /usr/src/rfd-notify/target/x86_64-unknown-linux-musl/release/rfd-notify ./rfd-notify
-
-ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
-ENV SSL_CERT_DIR=/etc/ssl/certs
-
-ENTRYPOINT ["/rfd-notify"]
+ENTRYPOINT ["python", "cli.py", "-c", "config.yaml"]

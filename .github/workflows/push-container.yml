@@ -1,5 +1,8 @@
 name: Publish Container
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   push_to_registry:
@@ -15,7 +18,7 @@ jobs:
           VERSION=${GITHUB_REF##*/}
 
           if [[ $GITHUB_REF == refs/heads/main ]]; then
-            VERSION=latest
+            VERSION=1
           fi
 
           if [[ $GITHUB_REF == refs/tags/* ]]; then
@@ -25,7 +28,7 @@ jobs:
           TAGS="${IMAGE_NAME}:${VERSION}"
 
           if [[ $VERSION =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-            TAGS="$TAGS,${IMAGE_NAME}:latest"
+            TAGS="$TAGS,${IMAGE_NAME}:1"
           fi
 
           echo ::set-output name=tags::${TAGS}
@@ -47,4 +50,3 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ steps.prep.outputs.tags }}
-

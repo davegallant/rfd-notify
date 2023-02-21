@@ -1,51 +1,43 @@
 # rfd-notify
 
-[![Publish Container](https://github.com/davegallant/rfd-notify/actions/workflows/docker.yml/badge.svg)](https://github.com/davegallant/rfd-notify/actions/workflows/docker.yml)
 [![Dependabot](https://badgen.net/badge/Dependabot/enabled/green?icon=dependabot)](https://dependabot.com/)
 
-This tool looks for matches on [RedFlagDeals.com forums](https://forums.redflagdeals.com/hot-deals-f9/) and sends email notfications.
+This tool looks for matches on [RedFlagDeals.com forums](https://forums.redflagdeals.com/hot-deals-f9/) and supports [apprise](https://github.com/caronc/apprise) push notifications.
 
-This was written before [alerts](https://www.redflagdeals.com/alerts/) existed. With rfd-notify, alerts never expire and support regular expressions.
+This was originally written before [alerts](https://www.redflagdeals.com/alerts/) existed. With rfd-notify, alerts never expire and support regular expressions.
 
 ## Prerequisites
 
-- a free [SendGrid API key](https://sendgrid.com/pricing/)
+- either [poetry](https://github.com/python-poetry/poetry), docker, or github actions
+- a free [SendGrid API key](https://sendgrid.com/pricing/) is suggested for email notifications
 
 ## Usage
 
+To run the code directly, clone this repo and run the following:
+
 ```shell
-USAGE:
-    rfd-notify [OPTIONS] --config <config>
-
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
-
-OPTIONS:
-    -c, --config <config>    Specify path to config
-    -d, --dbpath <dbpath>    Specify path to where the embedded database is stored [default: ./deals_db]
+poetry install
+poetry run python rfd_notify/cli.py -c examples/config.yml
 ```
 
 ### Environment Variables
 
 The following environment variables are required:
 
-| VARIABLE            | DESCRIPTION                                                      |
-| ------------------- | ---------------------------------------------------------------- |
-| SENDGRID_API_KEY    | Key can be created at https://app.sendgrid.com/settings/api_keys |
-| SENDGRID_MAIL_FROM  | The email address that the email is sent from                    |
-| SENDGRID_MAIL_TO    | The email address to notify                                      |
+| VARIABLE    | DESCRIPTION                                                      |
+| ----------- | ---------------------------------------------------------------- |
+| APPRISE_URL | See [notifications](https://github.com/caronc/apprise#productivity-based-notifications). |
 
 ## Example Configuration
 
-The following configuration can be passed to `rfd-notify`:
+Pass a list of expressions to be used for discovering deals:
 
 ```yaml
 # config.yml
 expressions:
- - pizza
- - starbucks
- - price error
+  - pizza
+  - starbucks
+  - price error
 ```
 
 ## Github Action
@@ -58,8 +50,8 @@ It also requires the corresponding [encrypted secrets](https://docs.github.com/e
 # .github/workflows/rfd-notify.yml
 
 on:
- schedule:
-  - cron: '*5 * * * *'
+  schedule:
+    - cron: "*5 * * * *"
 jobs:
   rfd_notify:
     runs-on: ubuntu-latest
@@ -73,9 +65,7 @@ jobs:
       - name: Run rfd-notify
         uses: davegallant/rfd-notify@main
         env:
-          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-          SENDGRID_MAIL_FROM: notify@rfd-notify.org
-          SENDGRID_MAIL_TO: ${{ secrets.SENDGRID_MAIL_TO }}
+          APPRISE_URL: ${{ secrets.APPRISE_URL }}
 
       - name: Commit files
         run: |
@@ -91,11 +81,9 @@ jobs:
           branch: ${{ github.ref }}
 ```
 
-
 ## Drone CI
 
 The following works on [Drone CI](https://www.drone.io/):
-
 
 ```yaml
 # .drone.yml
@@ -105,20 +93,17 @@ type: docker
 name: default
 
 steps:
+  - name: run rfd-notify
+    image: ghcr.io/davegallant/rfd-notify
+    environment:
+      APPRISE_URL:
+        from_secret: apprise_url
 
-- name: run rfd-notify
-  image: ghcr.io/davegallant/rfd-notify
-  environment:
-   SENDGRID_API_KEY:
-    from_secret: sendgrid_api_key
-   SENDGRID_MAIL_FROM: notify@rfd-notify.org
-   SENDGRID_MAIL_TO: example@example.com
-
-- name: commit db changes
-  image: appleboy/drone-git-push:0.2.1
-  settings:
-    branch: main
-    remote_name: origin
-    force: false
-    commit: true
+  - name: commit db changes
+    image: appleboy/drone-git-push:0.2.1
+    settings:
+      branch: main
+      remote_name: origin
+      force: false
+      commit: true
 ```

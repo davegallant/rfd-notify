@@ -1,5 +1,5 @@
 expressions:
- - amazon
- - costco
  - price error
  - starbucks
+ - pizza
+ - ontario(.*)grocery
