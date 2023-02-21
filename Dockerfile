@@ -1,4 +1,4 @@
-FROM cgr.dev/chainguard/python:dev-3.11 as builder
+FROM cgr.dev/chainguard/python:dev-3.11.1 as builder
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ RUN pip install poetry==1.3.2 && \
 
 RUN pip install -r /tmp/requirements.txt --user
 
-FROM cgr.dev/chainguard/python:3.11
+FROM cgr.dev/chainguard/python:3.11.1
 
 WORKDIR /app
 
