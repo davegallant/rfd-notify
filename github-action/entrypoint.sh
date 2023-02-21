@@ -2,4 +2,4 @@
 
 echo "Starting rfd-notify with config: $1"
 
-rfd-notify -c "$1"
+python /app/cli.py -c "$1"

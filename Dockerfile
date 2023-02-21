@@ -20,4 +20,4 @@ COPY --from=builder /home/nonroot/.local/lib/python3.11/site-packages /home/nonr
 
 COPY rfd_notify .
 
-ENTRYPOINT ["python", "cli.py", "-c", "config.yaml"]
+ENTRYPOINT ["python", "/app/cli.py", "-c", "config.yml"]
