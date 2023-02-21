@@ -1,8 +1,11 @@
 from typing import List
+from datetime import datetime, timezone
+
 import apprise
 from models.topic import Topic
 from models.post import Post
 from loguru import logger
+from constants import API_BASE_URL
 
 
 def send_notification(
@@ -13,7 +16,7 @@ def send_notification(
 
     subject = topic.title
     body = f"""\
-    <b>Post time:</b> {topic.post_time}
+    <b>Post age:</b> {datetime.now(timezone.utc) - datetime.fromisoformat(topic.post_time)}
     <br>
     <br>
     <b>Dealer:</b> {topic.offer.dealer_name}
@@ -22,7 +25,7 @@ def send_notification(
     <b>Deal:</b> {topic.title}
     <br>
     <br>
-    <b>Post:</b> {topic.web_path}\
+    <b>Post:</b> {API_BASE_URL}{topic.web_path}\
     <br>
     <br>
     <b>Body:</b> {posts[0].body}
