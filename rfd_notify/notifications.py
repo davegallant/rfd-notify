@@ -11,6 +11,10 @@ from constants import API_BASE_URL
 def send_notification(
     topic: Topic, posts: List[Post], expression: str, servers: str
 ) -> None:
+    if servers is None:
+        logger.warning("APPRISE_URL is not set. Will not send notifcation")
+        return
+
     apobj = apprise.Apprise()
     apobj.add(servers)
 
