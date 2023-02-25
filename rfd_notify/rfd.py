@@ -63,22 +63,24 @@ def look_for_matches(
             for expression in config.expressions:
                 expression = expression.lower()
                 topic_title = topic.title.lower()
-                if topic.offer.dealer_name:
+                dealer_name = ""
+
+                if topic.offer.dealer_name is not None:
                     dealer_name = topic.offer.dealer_name.lower()
-                else:
-                    dealer_name = ""
                 if re.search(expression, topic_title):
                     found_match = True
                     logger.debug(
-                        f"Expression {expression} matched title '{topic.title}'"
+                        f"Expression {expression} matched title '{dealer_name} - {topic.title}'"
                     )
                 elif re.search(expression, dealer_name):
                     found_match = True
                     logger.debug(
                         f"Expression {expression} matched dealer '{dealer_name}' - '{topic.title}'"
                     )
+
                 if not found_match:
                     continue
+
                 if str(topic.topic_id) not in previous_matches:
                     posts = get_topic(topic.topic_id)
                     previous_matches[str(topic.topic_id)] = 1
