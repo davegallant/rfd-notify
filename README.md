@@ -1,6 +1,6 @@
 # rfd-notify
 
-This tool looks for matches on [RedFlagDeals.com forums](https://forums.redflagdeals.com/hot-deals-f9/) and supports [apprise](https://github.com/caronc/apprise) push notifications.
+This tool looks for matches on [RedFlagDeals.com forums](https://forums.redflagdeals.com/hot-deals-f9/) and will send push notifications via [apprise](https://github.com/caronc/apprise).
 
 This was originally written before [alerts](https://www.redflagdeals.com/alerts/) existed. With rfd-notify, alerts never expire and support regular expressions.
 
