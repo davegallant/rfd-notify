@@ -11,7 +11,13 @@ This was originally written before [alerts](https://www.redflagdeals.com/alerts/
 
 ## Usage
 
-To run the code directly, clone this repo and run the following:
+The simplest way to get started is to clone this repo, and run with docker:
+
+```sh
+docker run -it -v "$(pwd)/examples/config.yml:/app/config.yml"  ghcr.io/davegallant/rfd-notify:1
+```
+
+To run the code with [poetry](https://python-poetry.org/), clone this repo and run the following:
 
 ```shell
 poetry install

@@ -63,7 +63,10 @@ def look_for_matches(
             for expression in config.expressions:
                 expression = expression.lower()
                 topic_title = topic.title.lower()
-                dealer_name = topic.offer.dealer_name.lower()
+                if topic.offer.dealer_name:
+                    dealer_name = topic.offer.dealer_name.lower()
+                else:
+                    dealer_name = ""
                 if re.search(expression, topic_title):
                     found_match = True
                     logger.debug(
