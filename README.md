@@ -46,6 +46,8 @@ expressions:
 
 ## Github Action
 
+> Commiting the pickled data (previous_matches) back into the repository is a bit of a hack, but allows for a simpler setup.
+
 An action can be setup to scan for deals, send a notification and store previously found deals in the repo.
 
 It also requires the corresponding [encrypted secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets) setup.
@@ -76,7 +78,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "RFD Notify"
           git add previous_matches
-          git commit -m "Add matches" -a || true
+          git commit -m "Update previous_matches" -a || true
 
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -85,29 +87,53 @@ jobs:
           branch: ${{ github.ref }}
 ```
 
-## Drone CI
+## Jenkins
 
-The following works on [Drone CI](https://www.drone.io/):
+> The necessary Jenkins plugins (such as docker) and credentials must be configured.
 
-```yaml
-# .drone.yml
----
-kind: pipeline
-type: docker
-name: default
+Using a declarative pipeline, run the build every minute, and store the previous matches in the workspace:
 
-steps:
-  - name: run rfd-notify
-    image: ghcr.io/davegallant/rfd-notify:1
-    environment:
-      APPRISE_URL:
-        from_secret: apprise_url
+```groovy
+pipeline {
+    agent any
 
-  - name: commit db changes
-    image: appleboy/drone-git-push:0.2.1
-    settings:
-      branch: main
-      remote_name: origin
-      force: false
-      commit: true
+    triggers {
+        cron('* * * * *')
+    }
+
+    options {
+        buildDiscarder(
+            logRotator(
+                numToKeepStr: '25',
+                artifactNumToKeepStr: '25'
+            )
+        )
+    }
+
+    environment {
+        APPRISE_URL = 'true'
+    }
+
+    stages {
+        stage('Run rfd-notify') {
+            agent {
+                docker {
+                    image 'ghcr.io/davegallant/rfd-notify:1'
+                    args '--entrypoint='
+                    reuseNode true
+                }
+            }
+            steps {
+                withCredentials([string(credentialsId: 'apprise-url', variable: 'APPRISE_URL')]) {
+                    sh 'python /app/rfd_notify/cli.py -c config.yml'
+                }
+            }
+        }
+        stage('Archive previous_matches') {
+            steps {
+                archiveArtifacts artifacts: 'previous_matches'
+            }
+        }
+    }
+}
 ```
