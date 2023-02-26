@@ -6,6 +6,7 @@ WORKDIR /app
 COPY . .
 
 RUN pip install --no-cache-dir poetry==1.3.2 && \
-  poetry install --no-root
+  poetry export -f requirements.txt > /tmp/requirements.txt && \
+  pip install -r /tmp/requirements.txt
 
-ENTRYPOINT ["poetry", "run", "-C", "/app", "python", "/app/rfd_notify/cli.py", "-c", "config.yml"]
+ENTRYPOINT ["python", "/app/rfd_notify/cli.py", "-c", "config.yml"]
