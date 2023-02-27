@@ -19,7 +19,7 @@ black = "^23.1.0"
 pylint = "^2.16.2"
 rope = "^1.7.0"
 mypy = "^1.0.1"
-types-requests = "^2.28.11.14"
+types-requests = "^2.28.11.15"
 
 [build-system]
 requires = ["poetry-core"]
