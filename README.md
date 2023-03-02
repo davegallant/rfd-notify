@@ -108,10 +108,7 @@ pipeline {
                 artifactNumToKeepStr: '25'
             )
         )
-    }
-
-    environment {
-        APPRISE_URL = 'true'
+        disableConcurrentBuilds()
     }
 
     stages {
