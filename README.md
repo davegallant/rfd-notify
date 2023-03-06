@@ -44,7 +44,7 @@ expressions:
   - price error
 ```
 
-## Github Action
+## Github Actions
 
 > Commiting the pickled data (previous_matches) back into the repository is a bit of a hack, but allows for a simpler setup.
 
@@ -85,6 +85,29 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+```
+
+## Gitlab Pipelines
+
+> Create a [scheduled pipeline](https://docs.gitlab.com/ee/ci/pipelines/schedules.html) to run on a regular interval.
+
+With Gitlab Pipelines, the following configuration works:
+
+```yaml
+#.gitlab-ci.yml
+default:
+  image:
+    name: ghcr.io/davegallant/rfd-notify:1
+    entrypoint: [""]
+
+run:
+  cache:
+    - key: previous_matches
+      paths:
+        - previous_matches
+  script:
+    - python /app/rfd_notify/cli.py -c config.yml
+
 ```
 
 ## Jenkins
