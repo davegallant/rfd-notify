@@ -12,7 +12,7 @@ def send_notification(
     topic: Topic, posts: List[Post], expression: str, servers: str
 ) -> None:
     if servers is None:
-        logger.warning("APPRISE_URL is not set. Will not send notifcation")
+        logger.warning("APPRISE_URL is not set. Will not send notification")
         return
 
     apobj = apprise.Apprise()
