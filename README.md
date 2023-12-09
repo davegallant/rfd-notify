@@ -44,7 +44,7 @@ expressions:
   - price error
 ```
 
-## Github Actions
+## Github Actions (and Gitea Actions)
 
 > Commiting the pickled data (previous_matches) back into the repository is a bit of a hack, but allows for a simpler setup.
 
@@ -57,7 +57,7 @@ It also requires the corresponding [encrypted secrets](https://docs.github.com/e
 
 on:
   schedule:
-    - cron: "*5 * * * *"
+    - cron: "*/5 * * * *"
 jobs:
   rfd_notify:
     runs-on: ubuntu-latest
@@ -66,20 +66,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
+          branch: main
           fetch-depth: 0
-
       - name: Run rfd-notify
         uses: davegallant/rfd-notify@main
         env:
           APPRISE_URL: ${{ secrets.APPRISE_URL }}
-
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "RFD Notify"
           git add previous_matches
           git commit -m "Update previous_matches" -a || true
-
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
@@ -108,52 +106,4 @@ run:
   script:
     - python /app/rfd_notify/cli.py -c config.yml
 
-```
-
-## Jenkins
-
-> The necessary Jenkins plugins (such as docker) and credentials must be configured.
-
-Using a declarative pipeline, run the build every minute, and store the previous matches in the workspace:
-
-```groovy
-pipeline {
-    agent any
-
-    triggers {
-        cron('* * * * *')
-    }
-
-    options {
-        buildDiscarder(
-            logRotator(
-                numToKeepStr: '25',
-                artifactNumToKeepStr: '25'
-            )
-        )
-        disableConcurrentBuilds()
-    }
-
-    stages {
-        stage('Run rfd-notify') {
-            agent {
-                docker {
-                    image 'ghcr.io/davegallant/rfd-notify:1'
-                    args '--entrypoint='
-                    reuseNode true
-                }
-            }
-            steps {
-                withCredentials([string(credentialsId: 'apprise-url', variable: 'APPRISE_URL')]) {
-                    sh 'python /app/rfd_notify/cli.py -c config.yml'
-                }
-            }
-        }
-        stage('Archive previous_matches') {
-            steps {
-                archiveArtifacts artifacts: 'previous_matches'
-            }
-        }
-    }
-}
 ```
