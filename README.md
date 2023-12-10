@@ -28,8 +28,8 @@ poetry run python rfd_notify/cli.py -c examples/config.yml
 
 The following environment variables are required:
 
-| VARIABLE    | DESCRIPTION                                                      |
-| ----------- | ---------------------------------------------------------------- |
+| VARIABLE    | DESCRIPTION                                                                              |
+| ----------- | ---------------------------------------------------------------------------------------- |
 | APPRISE_URL | See [notifications](https://github.com/caronc/apprise#productivity-based-notifications). |
 
 ## Example Configuration
@@ -60,29 +60,21 @@ on:
     - cron: "*/5 * * * *"
 jobs:
   rfd_notify:
-    runs-on: ubuntu-latest
     name: rfd-notify
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          branch: main
-          fetch-depth: 0
-      - name: Run rfd-notify
-        uses: davegallant/rfd-notify@main
-        env:
-          APPRISE_URL: ${{ secrets.APPRISE_URL }}
-      - name: Commit files
+          sparse-checkout: |
+            config.yml
+            previous_matches
+      - name: Commit and push changes
         run: |
-          git config --local user.email "action@github.com"
+          git config --local user.email "actions@github.com"
           git config --local user.name "RFD Notify"
           git add previous_matches
           git commit -m "Update previous_matches" -a || true
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          git push
 ```
 
 ## Gitlab Pipelines
@@ -105,5 +97,4 @@ run:
         - previous_matches
   script:
     - python /app/rfd_notify/cli.py -c config.yml
-
 ```
