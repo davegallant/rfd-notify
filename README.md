@@ -7,7 +7,7 @@ This was originally written before [alerts](https://www.redflagdeals.com/alerts/
 ## Prerequisites
 
 - either [poetry](https://github.com/python-poetry/poetry), docker, or github actions
-- a free [SendGrid API key](https://sendgrid.com/pricing/) is suggested for email notifications
+- [sendgrid](https://sendgrid.com/pricing/) or gmail can be used for email notifications ([see docs](https://github.com/caronc/apprise/wiki/Notify_email#using-built-in-email-services))
 
 ## Usage
 
