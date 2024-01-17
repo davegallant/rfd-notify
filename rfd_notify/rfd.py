@@ -65,7 +65,7 @@ def look_for_matches(
                 topic_title = topic.title.lower()
                 dealer_name = ""
 
-                if topic.offer.dealer_name is not None:
+                if topic.offer and topic.offer.dealer_name is not None:
                     dealer_name = topic.offer.dealer_name.lower()
                 if re.search(expression, topic_title):
                     found_match = True
@@ -86,7 +86,5 @@ def look_for_matches(
                     previous_matches[str(topic.topic_id)] = 1
                     send_notification(topic, posts, expression, apprise_url)
                 else:
-                    logger.debug(
-                        f"Already matched topic '{topic.offer.dealer_name} - {topic.title}'"
-                    )
+                    logger.debug(f"Already matched topic '{topic.title}'")
                 break

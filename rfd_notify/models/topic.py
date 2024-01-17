@@ -17,7 +17,8 @@ class Topic:
         self.title = title
         self.post_time = post_time
         self.web_path = web_path
-        self.offer = Offer(**offer)
+        if offer:
+            self.offer = Offer(**offer)
 
     def __repr__(self):
         return f"Topic({self.title})"

@@ -18,12 +18,17 @@ def send_notification(
     apobj = apprise.Apprise()
     apobj.add(servers)
 
+    if topic.offer:
+        dealer_name = topic.offer.dealer_name
+    else:
+        dealer_name = ""
+
     subject = topic.title
     body = f"""\
     <b>Post age:</b> {datetime.now(timezone.utc) - datetime.fromisoformat(topic.post_time)}
     <br>
     <br>
-    <b>Dealer:</b> {topic.offer.dealer_name}
+    <b>Dealer:</b> {dealer_name}
     <br>
     <br>
     <b>Deal:</b> {topic.title}
