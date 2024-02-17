@@ -50,7 +50,7 @@ expressions:
 
 An action can be setup to scan for deals, send a notification and store previously found deals in the repo.
 
-It also requires the corresponding [encrypted secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets) setup.
+The following workflow requires an `APPRISE_URL` [secret](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets).
 
 ```yaml
 # .github/workflows/rfd-notify.yml
