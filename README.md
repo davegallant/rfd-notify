@@ -68,6 +68,12 @@ jobs:
           sparse-checkout: |
             config.yml
             previous_matches
+      - name: git pull
+        run: git pull
+      - name: Run rfd-notify
+        uses: davegallant/rfd-notify@main
+        env:
+          APPRISE_URL: ${{ secrets.APPRISE_URL }}
       - name: Commit and push changes
         run: |
           git config --local user.email "actions@github.com"
