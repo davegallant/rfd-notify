@@ -17,6 +17,7 @@ class Topic:
         self.title = title
         self.post_time = post_time
         self.web_path = web_path
+        self.offer = None
         if offer:
             self.offer = Offer(**offer)
 
