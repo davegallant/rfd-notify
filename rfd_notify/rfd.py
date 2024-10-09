@@ -4,7 +4,7 @@ import re
 import shelve
 import requests
 from loguru import logger
-from constants import API_BASE_URL
+from constants import API_BASE_URL, HEADERS
 
 from config import Config
 from notifications import send_notification
@@ -22,6 +22,7 @@ def get_topic(topic_id: int) -> List[Post]:
     try:
         response = requests.get(
             f"{API_BASE_URL}/api/topics/{topic_id}/posts?per_page=1&page=1",
+            headers=HEADERS,
             timeout=30,
         )
         if response.status_code != 200:
@@ -41,6 +42,7 @@ def get_topics(forum_id: int, pages: int) -> List[Topic]:
         for page in range(1, pages + 1):
             response = requests.get(
                 f"{API_BASE_URL}/api/topics?forum_id={forum_id}&per_page=40&page={page}",
+                headers=HEADERS,
                 timeout=30,
             )
             if response.status_code != 200:
