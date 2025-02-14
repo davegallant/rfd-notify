@@ -84,9 +84,8 @@ def look_for_matches(
                     continue
 
                 if str(topic.topic_id) not in previous_matches:
-                    posts = get_topic(topic.topic_id)
                     previous_matches[str(topic.topic_id)] = 1
-                    send_notification(topic, posts, expression, apprise_url)
+                    send_notification(topic, expression, apprise_url)
                 else:
                     logger.debug(f"Already matched topic '{topic.title}'")
                 break

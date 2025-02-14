@@ -28,7 +28,7 @@ jobs:
           TAGS="${IMAGE_NAME}:${VERSION}"
 
           if [[ $VERSION =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-            TAGS="$TAGS,${IMAGE_NAME}:1"
+            TAGS="$TAGS,${IMAGE_NAME}:2"
           fi
 
           echo ::set-output name=tags::${TAGS}

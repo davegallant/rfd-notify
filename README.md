@@ -7,7 +7,6 @@ This was originally written before [alerts](https://www.redflagdeals.com/alerts/
 ## Prerequisites
 
 - either [poetry](https://github.com/python-poetry/poetry), docker, or github actions
-- for email notifications [see supported providers](https://github.com/caronc/apprise/wiki/Notify_email#using-built-in-email-services)
 
 ## Usage
 
@@ -30,7 +29,7 @@ The following environment variables are required:
 
 | VARIABLE    | DESCRIPTION                                                                              |
 | ----------- | ---------------------------------------------------------------------------------------- |
-| APPRISE_URL | See [notifications](https://github.com/caronc/apprise#productivity-based-notifications). |
+| APPRISE_URL | See [supported notifications](https://github.com/caronc/apprise#productivity-based-notifications). |
 
 ## Example Configuration
 
@@ -93,7 +92,7 @@ With Gitlab Pipelines, the following configuration works:
 #.gitlab-ci.yml
 default:
   image:
-    name: ghcr.io/davegallant/rfd-notify:1
+    name: ghcr.io/davegallant/rfd-notify:2
     entrypoint: [""]
 
 run:
