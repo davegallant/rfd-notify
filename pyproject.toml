@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "rfd-notify"
-version = "2.0.0"
+version = "2.1.0"
 description = "get notified of deals based on regex"
-authors = ["Dave Gallant <dave.gallant@gmail.com>"]
+authors = ["Dave Gallant <davegallant@gmail.com>"]
 readme = "README.md"
 packages = [{include = "rfd_notify"}]
 
@@ -12,6 +12,7 @@ requests = "^2.31.0"
 pyyaml = "^6.0"
 loguru = "^0.7.2"
 apprise = "^1.7.1"
+humanize = "^4.12.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"

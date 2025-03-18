@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 
 import apprise
+import humanize
 from models.topic import Topic
 from loguru import logger
 from constants import API_BASE_URL
@@ -17,7 +18,7 @@ def send_notification(topic: Topic, expression: str, servers: str) -> None:
     subject = topic.title
     body = f"""\
 {API_BASE_URL}{topic.web_path}
-Age: {datetime.now(timezone.utc) - datetime.fromisoformat(topic.post_time)}
+⌚ {humanize.naturaltime(datetime.now(timezone.utc) - datetime.fromisoformat(topic.post_time))}
 Matched by expression: {expression}
 """
 
