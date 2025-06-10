@@ -8,7 +8,7 @@ packages = [{include = "rfd_notify"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-requests = "^2.31.0"
+requests = "^2.32.4"
 pyyaml = "^6.0"
 loguru = "^0.7.2"
 apprise = "^1.7.1"
