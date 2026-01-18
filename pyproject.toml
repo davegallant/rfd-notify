@@ -16,7 +16,7 @@ humanize = "^4.12.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
-black = "^25.0.0"
+black = "^26.0.0"
 pylint = "^3.0.3"
 rope = "^1.11.0"
 mypy = "^1.8.0"
