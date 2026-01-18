@@ -1,4 +1,4 @@
-FROM python:3.13-slim-trixie AS builder
+FROM python:3.14-slim-trixie AS builder
 WORKDIR /app
 COPY pyproject.toml poetry.lock* ./
 RUN pip install --no-cache-dir poetry==2.2.1 poetry-plugin-export && \
