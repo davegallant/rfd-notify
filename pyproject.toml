@@ -17,7 +17,7 @@ humanize = "^4.12.1"
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.0"
 black = "^26.0.0"
-pylint = "^3.0.3"
+pylint = "^4.0.0"
 rope = "^1.11.0"
 mypy = "^1.8.0"
 types-requests = "^2.31.0.20240106"
