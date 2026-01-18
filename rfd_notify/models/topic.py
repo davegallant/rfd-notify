@@ -4,6 +4,7 @@ from .offer import Offer
 class Topic:
     # pylint: disable=unused-argument
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-positional-arguments
     def __init__(
         self,
         topic_id: int,
