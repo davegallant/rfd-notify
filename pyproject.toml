@@ -15,7 +15,7 @@ apprise = "^1.7.1"
 humanize = "^4.12.1"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.0.0"
+pytest = "^9.0.0"
 black = "^26.0.0"
 pylint = "^3.0.3"
 rope = "^1.11.0"
