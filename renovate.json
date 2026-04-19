@@ -5,6 +5,6 @@
     "helpers:pinGitHubActionDigests"
   ],
   "schedule": [
-    "every weekend"
+    "after 5pm on friday"
   ]
 }
