@@ -5,6 +5,6 @@
     "helpers:pinGitHubActionDigests"
   ],
   "schedule": [
-    "after 5pm on friday"
+    "on the 1st day of the month"
   ]
 }
