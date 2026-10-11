@@ -31,6 +31,14 @@ The following environment variables are required:
 | ----------- | ---------------------------------------------------------------------------------------- |
 | APPRISE_URL | See [supported notifications](https://github.com/caronc/apprise#productivity-based-notifications). |
 
+Notifications use Markdown for a bold, clickable deal title. For Gotify, append
+`?format=markdown` to the Apprise URL (or `&format=markdown` if it already has
+query parameters), for example:
+
+```text
+gotifys://gotify.example.com/APP_TOKEN?format=markdown
+```
+
 ## Example Configuration
 
 Pass a list of expressions to be used for discovering deals:
