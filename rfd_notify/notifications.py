@@ -26,7 +26,8 @@ def send_notification(topic: Topic, expression: str, servers: str) -> None:
         datetime.now(timezone.utc) - datetime.fromisoformat(topic.post_time)
     )
     body = (
-        f"**[{escape_markdown(topic.title)}]({API_BASE_URL}{topic.web_path}){{:target=\"_blank\"}}**\n\n"
+        f"**[{escape_markdown(topic.title)}]({API_BASE_URL}{topic.web_path})"
+        '{:target="_blank"}**\n\n'
         f"⌚ {age} · Matched: {escape_markdown(expression)}"
     )
 
