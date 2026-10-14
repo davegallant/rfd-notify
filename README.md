@@ -33,8 +33,7 @@ The following environment variables are required:
 
 Notifications use Markdown for a bold, clickable deal title. For Gotify, append
 `?format=markdown` to the Apprise URL (or `&format=markdown` if it already has
-query parameters), for example. The link uses Gotify's Markdown target extension
-to open in a new browser tab; this requires Gotify server 2.7.1 or newer.
+query parameters), for example:
 
 ```text
 gotifys://gotify.example.com/APP_TOKEN?format=markdown
