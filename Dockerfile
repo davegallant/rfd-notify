@@ -1,5 +1,5 @@
 FROM python:3.14-slim-trixie AS builder
-COPY --from=ghcr.io/astral-sh/uv:0.11.21 /uv /bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.13.1 /uv /bin/uv
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv export --frozen --no-dev --no-emit-project --no-hashes --format requirements-txt --output-file requirements.txt
