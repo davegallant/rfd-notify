@@ -6,7 +6,7 @@ This was originally written before [alerts](https://www.redflagdeals.com/alerts/
 
 ## Prerequisites
 
-- either [poetry](https://github.com/python-poetry/poetry), docker, or github actions
+- either [uv](https://docs.astral.sh/uv/), docker, or github actions
 
 ## Usage
 
@@ -16,11 +16,11 @@ The simplest way to get started is to clone this repo, and run with docker:
 docker run --rm -v "$(pwd)/examples/config.yml:/app/config.yml" $(docker build -q -t rfd-notify .)
 ```
 
-To run the code with [poetry](https://python-poetry.org/), clone this repo and run the following:
+To run the code with [uv](https://docs.astral.sh/uv/), clone this repo and run the following:
 
 ```shell
-poetry install
-poetry run python rfd_notify/cli.py -c examples/config.yml
+uv sync
+uv run python rfd_notify/cli.py -c examples/config.yml
 ```
 
 ### Environment Variables

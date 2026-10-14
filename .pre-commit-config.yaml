@@ -25,6 +25,6 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: poetry run pylint
+        entry: uv run --locked pylint
         language: system
         types: [python]

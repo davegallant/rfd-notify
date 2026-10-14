@@ -1,8 +1,8 @@
 FROM python:3.14-slim-trixie AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.11.21 /uv /bin/uv
 WORKDIR /app
-COPY pyproject.toml poetry.lock* ./
-RUN pip install --no-cache-dir poetry==2.2.1 poetry-plugin-export && \
-    poetry export -f requirements.txt --without-hashes --output requirements.txt
+COPY pyproject.toml uv.lock ./
+RUN uv export --frozen --no-dev --no-emit-project --no-hashes --format requirements-txt --output-file requirements.txt
 RUN python -m venv /venv && \
     /venv/bin/pip install --no-cache-dir -r requirements.txt
 COPY . .
