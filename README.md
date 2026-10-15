@@ -1,103 +1,99 @@
 # rfd-notify
 
-This tool looks for matches on [RedFlagDeals.com forums](https://forums.redflagdeals.com/hot-deals-f9/) and will send push notifications via [apprise](https://github.com/caronc/apprise).
+`rfd-notify` scans the latest posts in the RedFlagDeals Hot Deals forum and sends a notification when a topic title or dealer name matches one of your expressions. Expressions use Python regular expression syntax and are matched without regard to case.
 
-This was originally written before [alerts](https://www.redflagdeals.com/alerts/) existed. With rfd-notify, alerts never expire and support regular expressions.
+Matches are remembered in a local database so the same topic is only reported once.
 
-## Prerequisites
+## Requirements
 
-- either [uv](https://docs.astral.sh/uv/), docker, or github actions
+- Docker, or [uv](https://docs.astral.sh/uv/) with Python 3.10 or newer
+- An [Apprise URL](https://github.com/caronc/apprise#productivity-based-notifications) in the `APPRISE_URL` environment variable
 
-## Usage
+If `APPRISE_URL` is missing, the scan still runs but notifications are skipped.
 
-The simplest way to get started is to clone this repo, and run with docker:
+## Configuration
 
-```sh
-docker run --rm -v "$(pwd)/examples/config.yml:/app/config.yml" $(docker build -q -t rfd-notify .)
-```
-
-To run the code with [uv](https://docs.astral.sh/uv/), clone this repo and run the following:
-
-```shell
-uv sync
-uv run python rfd_notify/cli.py -c examples/config.yml
-```
-
-### Environment Variables
-
-The following environment variables are required:
-
-| VARIABLE    | DESCRIPTION                                                                              |
-| ----------- | ---------------------------------------------------------------------------------------- |
-| APPRISE_URL | See [supported notifications](https://github.com/caronc/apprise#productivity-based-notifications). |
-
-Notifications use Markdown for a bold, clickable deal title. For Gotify, append
-`?format=markdown` to the Apprise URL (or `&format=markdown` if it already has
-query parameters), for example:
-
-```text
-gotifys://gotify.example.com/APP_TOKEN?format=markdown
-```
-
-## Example Configuration
-
-Pass a list of expressions to be used for discovering deals:
+Create a `config.yml` with an `expressions` list. Each expression is searched in the topic title and, when available, the dealer name.
 
 ```yaml
-# config.yml
 expressions:
   - pizza
-  - starbucks
+  - starbucks¸¸¸¸
   - price error
+  - ontario(.*)grocery
 ```
 
-## Github Actions (and Gitea Actions)
+Patterns are passed to Python's `re` module. Invalid regular expressions will stop the scan.
 
-> Commiting the pickled data (previous_matches) back into the repository is a bit of a hack, but allows for a simpler setup.
+## Run with Docker
 
-An action can be setup to scan for deals, send a notification and store previously found deals in the repo.
+Build the image, then mount your configuration and match database so the database persists across runs:
 
-The following workflow requires an `APPRISE_URL` [secret](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets).
+```sh
+docker build -t rfd-notify .
+mkdir -p data
+docker run --rm \
+  -e APPRISE_URL \
+  -v "$PWD/config.yml:/app/config.yml:ro" \
+  -v "$PWD/data:/app/data" \
+  rfd-notify --storage-path /app/data/previous_matches
+```
+
+The container expects `/app/config.yml`; the example configuration is available at [`examples/config.yml`](examples/config.yml).
+
+## Run with uv
+
+```sh
+uv sync
+APPRISE_URL='your-apprise-url' uv run python rfd_notify/cli.py --config examples/config.yml
+```
+
+The command defaults to a `previous_matches` database in the current directory. Use `--storage-path` to choose another location:
+
+```sh
+uv run python rfd_notify/cli.py --config examples/config.yml --storage-path data/previous_matches
+```
+
+## GitHub Actions
+
+Run the action on a schedule and preserve `previous_matches` in the repository between runs. Add an `APPRISE_URL` repository secret and grant the workflow permission to write repository contents.
 
 ```yaml
-# .github/workflows/rfd-notify.yml
+name: rfd-notify
 
 on:
   schedule:
     - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
 jobs:
-  rfd_notify:
-    name: rfd-notify
+  notify:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            config.yml
-            previous_matches
-      - name: git pull
-        run: git pull
+      - uses: actions/checkout@v4
       - name: Run rfd-notify
         uses: davegallant/rfd-notify@main
         env:
           APPRISE_URL: ${{ secrets.APPRISE_URL }}
-      - name: Commit and push changes
+      - name: Save match history
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "RFD Notify"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add previous_matches
-          git commit -m "Update previous_matches" -a || true
+          git diff --cached --quiet || git commit -m "Update previous_matches"
           git push
 ```
 
-## Gitlab Pipelines
+The workflow expects `config.yml` at the repository root. The action reads it and uses `previous_matches` in its working directory. You can use the same steps in Gitea Actions with the corresponding checkout action and secret configuration.
 
-> Create a [scheduled pipeline](https://docs.gitlab.com/ee/ci/pipelines/schedules.html) to run on a regular interval.
+## GitLab Pipelines
 
-With Gitlab Pipelines, the following configuration works:
+Create a [scheduled pipeline](https://docs.gitlab.com/ee/ci/pipelines/schedules.html), configure `APPRISE_URL` as a CI/CD variable, and keep the match database in the job cache:
 
 ```yaml
-#.gitlab-ci.yml
 default:
   image:
     name: ghcr.io/davegallant/rfd-notify:2
@@ -105,9 +101,19 @@ default:
 
 run:
   cache:
-    - key: previous_matches
-      paths:
-        - previous_matches
+    key: previous_matches
+    paths:
+      - previous_matches
   script:
-    - python /app/rfd_notify/cli.py -c config.yml
+    - python /app/rfd_notify/cli.py --config config.yml
+```
+
+This expects `config.yml` in the repository root.
+
+## Notifications
+
+Notification bodies use Markdown and include a clickable topic title, post age, and the expression that matched. For Gotify, set Markdown formatting in the Apprise URL, for example:
+
+```text
+gotifys://gotify.example.com/APP_TOKEN?format=markdown
 ```
